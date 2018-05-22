@@ -1,8 +1,9 @@
 //app.js
-App({
-  onLaunch: function () {
-   
 
+var jwt = require('/utils/jwtUntil.js')
+App({
+  
+  onLaunch: function () {
     // 登录
     wx.login({
       success: res => {
@@ -10,22 +11,18 @@ App({
         console.info(res)
         if(res.code){
           wx.request({
-            url: 'http://127.0.0.1:8080/wx/login',
+            url: getApp().globalData.SERVICE_URL+ '/wx/login',
             data:{
               code:res.code
             },
             success:re=>{
-              console.info("请求返回:" + re.data.openId)
-              console.info("请求返回:" + re.data.rsaKey)
-              //保存rsa密钥
-              wx.setStorage({
-                key: 'openId',
-                data: re.data.openId,
-              })
-              wx.setStorage({
-                key: 'rsaKey',
-                data: re.data.rsaKey,
-              })
+              console.info("请求返回:" + re.data)
+              //保存token
+              jwt.setToken(re.data)
+              //设置全局token
+              this.globalData.TOKEN = jwt.getToken()
+              //console.info('全局变量:' + this.globalData.TOKEN)
+              //jwt.refresh()
             }
           }
           )
@@ -55,6 +52,8 @@ App({
     // })
   },
   globalData: {
-    userInfo: null
+    userInfo: null,
+    SERVICE_URL:'http://127.0.0.1:8080',//定义请求的Url
+    TOKEN : null
   }
 })

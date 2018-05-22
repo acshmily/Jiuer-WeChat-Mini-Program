@@ -1,0 +1,16 @@
+<view class="page">
+    <view class="page__hd">
+        <view class="page__title">功能菜单</view>
+        <view class="page__desc">看看有什么可以用的呢?</view>
+    </view>
+    <view class="page__bd">
+        <view class="weui-grids">
+            <block wx:for="{{menu}}" wx:item="item" wx:key="key">
+                <navigator url="{{item.url}}" class="weui-grid" hover-class="weui-grid_active">
+                    <image class="weui-grid__icon" src="{{item.picUrl}}" />
+                    <view class="weui-grid__label">{{item.title}}</view>
+                </navigator>
+            </block>
+        </view>
+    </view>
+</view>
