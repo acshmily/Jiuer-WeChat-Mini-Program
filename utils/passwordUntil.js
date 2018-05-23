@@ -349,19 +349,20 @@ function getLocalPasswordListById(id){
 
   
 }
-function addLocalPassword(subject,password){
+function addLocalPassword(id,subject,password){
     var psList = getLocalPasswordList()
     var obj = new Object();
     if (psList != null && psList.length >0){
-      var nextId = psList[psList.length - 1]
-      obj.id = nextId.id + 1
+      
+     
     }else{
-      obj.id = 0
+
       psList = new Array()
     }
+    obj.id = id
     obj.subject = subject
     obj.password = password
-    obj.creatTime = dataUntil.formatTime(new Date())
+    obj.createTime = dataUntil.formatTime(new Date())
     psList.push(obj)
     wx.setStorageSync('userLocalPassword', JSON.stringify(psList))
 
@@ -377,11 +378,12 @@ function removeLocalPasswordById(id){
   }
   wx.setStorageSync('userLocalPassword', JSON.stringify(newPsList))
 }
-function setPasswordSync(id){
+function setPasswordSync(id,syncId){
   var psList = getLocalPasswordList()
   for (var i = 0; i < psList.length; i++) {
     if (psList[i].id == id) {
       psList[i].syncStatus = true
+      psList[i].syncId = syncId
       break
     }
 
@@ -398,6 +400,17 @@ function checkPasswordSync(id){
     return check
   }
 }
+function updatePassWordById(id,newPassword){
+  var psList = getLocalPasswordList()
+  for (var i = 0; i < psList.length; i++) {
+    if (psList[i].id == id) {
+      psList[i].password = newPassword
+      psList[i].syncStatus = false
+      break
+    }
+  }
+  wx.setStorageSync('userLocalPassword', JSON.stringify(psList))
+}
 module.exports.theMotherSaidVariableNameMustBeLongForBuildPassword = theMotherSaidVariableNameMustBeLongForBuildPassword
 exports.randomString = randomString
 exports.getLocalPasswordList = getLocalPasswordList
@@ -406,3 +419,4 @@ exports.addLocalPassword = addLocalPassword
 exports.removeLocalPasswordById = removeLocalPasswordById
 exports.setPasswordSync = setPasswordSync
 exports.checkPasswordSync = checkPasswordSync
+exports.updatePassWordById = updatePassWordById

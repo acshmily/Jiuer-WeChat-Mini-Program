@@ -3,37 +3,47 @@ const jwt = jtwUntil.getToken()
 /**
  * http封装
  */
-function postHttp(path,data){
-    wx.request({
+function postHttp(path, data, callback){
+  var respone  = wx.request({
       url: getApp().globalData.SERVICE_URL+path,
       header: {
         'Authorization': `Bearer ${jwt}`
       },
       data: data,
       method:'POST',
-      success:re=>{
-        return re
+      success: function (re){
+
+        return typeof callback == "function" && callback(re.data)
+        
       },
-      fail:re=>{
-        return re
+      fail: function (re){
+
+        return typeof callback == "function" && callback(re.data)
+       
       }
       
     })
+    //return respone
 }
-function getHttp(path){
-  wx.request({
+function getHttp(path,callback){
+  var respone = wx.request({
     url: getApp().globalData.SERVICE_URL + path,
     header: {
       'Authorization': `Bearer ${jwt}`
     },
     method:'GET',
-    success:re=>{
-      return re
+    success:function(re){
+      
+
+      return typeof callback == "function" && callback(re.data)
     },
-    fail:re=>{
-      return re
+    fail: function (re){
+      
+
+      return typeof callback == "function" && callback(re.data)
     }
   })
+  //return respone
 }
 function delHttp(path){
   wx.request({
@@ -42,29 +52,36 @@ function delHttp(path){
       'Authorization': `Bearer ${jwt}`
     },
     method:'DELETE',
-    success:re=>{
-      return re
+    success: function (re){
+
+      return typeof callback == "function" && callback(re.data)
     },
-    fail:re=>{
-      return re
+    fail: function (re){
+
+      return typeof callback == "function" && callback(re.data)
     }
   })
 }
-function putHttp(path,data){
-  wx.request({
+function putHttp(path, data, callback){
+  
+  var res = wx.request({
     url: getApp().globalData.SERVICE_URL + path,
     header: {
       'Authorization': `Bearer ${jwt}`
     },
     method: 'PUT',
     data:data,
-    success: re => {
-      return re
+    success: function (re) {
+    
+      return typeof callback == "function" && callback(re.data)
+      
     },
-    fail: re => {
-      return re
+    fail: function (re) {
+      return typeof callback == "function" && callback(re.data)
     }
   })
+ 
+
 }
 module.exports.postHttp = postHttp
 exports.getHttp = getHttp

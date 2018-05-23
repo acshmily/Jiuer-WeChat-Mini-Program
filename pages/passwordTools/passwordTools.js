@@ -13,28 +13,54 @@ Page({
     psercue: '',
     subjectInputCssAppend: '',
     secureInputCssAppend: '',
-    LocalPasswordList:[]
+    LocalPasswordList:[],
+    SyncPasswordList:[],
+    loadingStatus : false
+
+  }, 
+  loadMore:function(e) {
+   console.info("获取事件")
   },
   onLoad: function () {
     var that = this;
     //console.info(psUtil.getLocalPasswordList())
+   
     wx.getSystemInfo({
       success: function (res) {
         that.setData({
           sliderLeft: (res.windowWidth / that.data.tabs.length - sliderWidth) / 2,
           sliderOffset: res.windowWidth / that.data.tabs.length * that.data.activeIndex,
-          LocalPasswordList : psUtil.getLocalPasswordList()
+          LocalPasswordList : psUtil.getLocalPasswordList(),
         });
       }
     });
     
   },
+  /**
+   * tab 点击事件
+   */
   tabClick: function (e) {
+    var that = this
     this.setData({
       sliderOffset: e.currentTarget.offsetLeft,
       activeIndex: e.currentTarget.id
     });
-    console.info(e)
+    
+    if (e.currentTarget.id == 2){
+      that.setData({
+        loadingStatus : true
+      })
+      //加载信息
+      httpUtil.getHttp("/api/password",function(re){
+        console.info("收到返回:"+JSON.stringify(re))
+        that.setData({
+          SyncPasswordList: re
+        })
+      })
+      that.setData({
+        loadingStatus: false
+      })
+    }
   },
   /**
    * 绑定注册主题值
@@ -66,6 +92,7 @@ Page({
     })
   },
   makeRandomPassword: function (e) {
+    var that  = this
     console.info("按钮事件" + e)
     var subject = ''
     var sercue = ''
@@ -112,7 +139,15 @@ Page({
           }
         });
     } else if (password.length > 0 && this.data.switchRandomPass == false ){
-      psUtil.addLocalPassword(subject,password)
+    
+      httpUtil.getHttp('/api/password/nextId',function(re){
+        console.info("收到请求:"+re)
+        psUtil.addLocalPassword(re,subject, password)
+        that.setData({
+          LocalPasswordList: psUtil.getLocalPasswordList()
+        })
+      })
+     
       //调出modal
       wx.showModal({
         title: '密码生成结果,并保存本地',
@@ -124,9 +159,7 @@ Page({
           }
         }
       });
-      this.setData({
-        LocalPasswordList: psUtil.getLocalPasswordList()
-      })
+     
     }
   },
   /**
@@ -151,8 +184,9 @@ Page({
   operationPassword:function(e){
     var id = e.currentTarget.id
     var that = this;
+    var res 
     wx.showActionSheet({
-      itemList: ['同步', '删除'],
+      itemList: ['同步', '删除','重新生成'],
       success: function (res) {
         if (!res.cancel) {
           console.log(res.tapIndex)
@@ -167,18 +201,46 @@ Page({
               var body = new Object()
               body.subject = psObj.subject
               body.password = psObj.password
-              try {
-                httpUtil.putHttp("/api/password",body)
-                }catch(e){
-                  wx.showToast({
-                    title: '同步失败,请稍候重试',
-                    icon: 'success',
-                    duration: 3000
-                  });
-                  httpStatus = false
+              if (!psObj.syncId){
+                try {
+                  console.info("没有发现云id,开始新增id处理")
+                  res = httpUtil.putHttp("/api/password", body, function(re){
+                    //收到的请求
+                    console.info(re)
+                    psUtil.setPasswordSync(id,re.id)
+                    that.setData({
+                      LocalPasswordList: psUtil.getLocalPasswordList()
+                    })
+                  })
+                  }catch(e){
+                    wx.showToast({
+                      title: '同步失败,请稍候重试',
+                      icon: 'success',
+                      duration: 3000
+                    });
+                    httpStatus = false
+                  }
+              }else{
+                  try {
+                    console.info("发现云id.开始更新操作")
+                    res = httpUtil.postHttp("/api/password/" + psObj.syncId, body,function(re){
+                      //收到的请求
+                      psUtil.setPasswordSync(id, re.id)
+                      that.setData({
+                        LocalPasswordList: psUtil.getLocalPasswordList()
+                      })
+                    })
+                  } catch (e) {
+                    wx.showToast({
+                      title: '同步失败,请稍候重试',
+                      icon: 'success',
+                      duration: 3000
+                    });
+                    httpStatus = false
+                  }
                 }
               if (httpStatus){
-                  psUtil.setPasswordSync(id)
+                  console.info(res)
                   wx.showToast({
                     title: '已完成',
                     icon: 'success',
@@ -205,19 +267,32 @@ Page({
               duration: 3000
             });
             console.info("刷新数据")
-           
+          }else if(res.tapIndex == 2){
+            //重新生成密码
+            var sercue = psUtil.randomString()
+            var obj = psUtil.getLocalPasswordListById(id)
+            var newPassword = psUtil.theMotherSaidVariableNameMustBeLongForBuildPassword(sercue, obj.subject)
+            //更新
+            psUtil.updatePassWordById(id, newPassword)
+            that.setData({
+              LocalPasswordList: psUtil.getLocalPasswordList()
+            })
+            //操作成功提醒
+            wx.showToast({
+              title: '已完成',
+              icon: 'success',
+              duration: 3000
+            });
+          
           }else{
             console.info("do nothing ..")
           }
-          that.setData({
-            LocalPasswordList: psUtil.getLocalPasswordList()
-          })
+
         }
     
       }
       
     });
-   
-    
-  }
+  },
+  
 });
