@@ -15,12 +15,38 @@ Page({
     secureInputCssAppend: '',
     LocalPasswordList:[],
     SyncPasswordList:[],
-    loadingStatus : false
+    RequestCache:[],
+    loadingStatus : false,
+    height : 0
 
   }, 
+  /**
+   * 分页操作
+   */
   loadMore:function(e) {
-   console.info("获取事件")
-  },
+   
+   var that = this
+   //如果不为最后一页则允许加载
+   if (!this.data.RequestCache.last){
+     wx.showLoading({
+       title: '加载中',
+       mask: true
+     })
+     //设置超时
+     setTimeout(function () {
+       wx.hideLoading()
+     }, 5000)
+     var nextPageNum = this.data.RequestCache.pageable.pageNumber == 0 ? 2 : this.data.RequestCache.pageable.pageNumber +1
+     console.info("当前页数")
+     httpUtil.getHttp("/api/password?page="+nextPageNum,function(re){
+       that.setData({
+         SyncPasswordList: that.data.SyncPasswordList.concat(re.content),
+         RequestCache: re
+       })
+       wx.hideLoading()
+     })
+   }
+   },
   onLoad: function () {
     var that = this;
     //console.info(psUtil.getLocalPasswordList())
@@ -31,6 +57,7 @@ Page({
           sliderLeft: (res.windowWidth / that.data.tabs.length - sliderWidth) / 2,
           sliderOffset: res.windowWidth / that.data.tabs.length * that.data.activeIndex,
           LocalPasswordList : psUtil.getLocalPasswordList(),
+          height : res.screenHeight -100
         });
       }
     });
@@ -54,7 +81,8 @@ Page({
       httpUtil.getHttp("/api/password",function(re){
         console.info("收到返回:"+JSON.stringify(re))
         that.setData({
-          SyncPasswordList: re
+          SyncPasswordList: re.content,
+          RequestCache : re
         })
       })
       that.setData({
@@ -267,6 +295,9 @@ Page({
               duration: 3000
             });
             console.info("刷新数据")
+            that.setData({
+              LocalPasswordList: psUtil.getLocalPasswordList()
+            })
           }else if(res.tapIndex == 2){
             //重新生成密码
             var sercue = psUtil.randomString()
@@ -294,5 +325,53 @@ Page({
       
     });
   },
-  
+  querySyncPassowrd:function(e){
+    var id = e.currentTarget.id
+    if(id <= 0 ){
+      return
+    }
+    httpUtil.getHttp("/api/password/"+id,function(re){
+      //展示
+      wx.showModal({
+        title: re.psubject,
+        content: re.psecure,
+        showCancel: false,
+        success: function (res) {
+          if (res.confirm) {
+            console.log('用户点击确定')
+          }
+        }
+      });
+    })
+  },
+  operationSyncPassword:function(e){
+    var id = e.currentTarget.id
+    var that = this;
+    var tempList = 
+    wx.showModal({
+      title: '确认删除?',
+      content: '云端记录一旦删除无法回复,请确认是否执行删除',
+      confirmText: "再想想",
+      cancelText: "删除",
+      success: function (res) {
+        console.log(res);
+        if (res.confirm) {
+          console.log('用户点击主操作')
+        } else {
+          var tempList = []
+          httpUtil.delHttp("/api/password/"+id,function(re){
+              //删除该条记录本地数据
+            for (var i = 0; i < that.data.SyncPasswordList.length ; i++){
+              if (that.data.SyncPasswordList[i].id != id){
+                tempList.push(that.data.SyncPasswordList[i])
+              }
+            }
+            that.setData({
+              SyncPasswordList: tempList
+            })
+          })
+        }
+      }
+    });
+  }
 });

@@ -45,7 +45,7 @@ function getHttp(path,callback){
   })
   //return respone
 }
-function delHttp(path){
+function delHttp(path,callback){
   wx.request({
     url: getApp().globalData.SERVICE_URL + path,
     header: {
