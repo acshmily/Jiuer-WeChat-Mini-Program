@@ -3,7 +3,10 @@
     "pages/index/index",
     "pages/logs/logs",
     "pages/native/native",
-    "pages/passwordTools/passwordTools"
+    "pages/passwordTools/passwordTools",
+    "pages/joinus/joinus",
+    "pages/decisions/index",
+    "pages/decisions/result"
   ],
   "window":{
     "backgroundTextStyle":"light",

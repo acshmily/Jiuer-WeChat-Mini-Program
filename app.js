@@ -4,6 +4,12 @@ var jwt = require('/utils/jwtUntil.js')
 App({
   
   onLaunch: function () {
+    // var _date = new Date()
+    // var expriseTime = jwt.getExprise()
+    // console.info("本地缓存:" + expriseTime+"当前时间:"+_date.getTime())
+    // if (expriseTime >= _date.getTime() && expriseTime != ''){
+    //   return
+    // }
     // 登录
     wx.login({
       success: res => {
@@ -52,8 +58,8 @@ App({
     // })
   },
   globalData: {
-    userInfo: null,
-    SERVICE_URL:'http://127.0.0.1:8080',//定义请求的Url
-    TOKEN : null
+      userInfo: null,
+      SERVICE_URL:'http://127.0.0.1:8080',//定义请求的Url
+      TOKEN : null
   }
 })

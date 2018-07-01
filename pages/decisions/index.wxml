@@ -1,0 +1,46 @@
+<view class="page" xmlns:wx="http://www.w3.org/1999/xhtml">
+    <view class="page__hd">
+        <view class="page__title">纠结助手</view>
+        <view class="page__desc">本功能默认开启同步,即:你的每一次决策结果都会上传到咎儿后台,以便咎儿更好的理解人类的烦恼.咎儿承诺收集数据不会用于其他用途.当然你可以可以选择关闭同步</view>
+    </view>
+    <view class="page__bd">
+
+        <view class="weui-cells__title"></view>
+        <view class="weui-cells weui-cells_after-title">
+            <view class="weui-cell weui-cell_switch">
+                <view class="weui-cell__bd">开启结果反馈</view>
+                <view class="weui-cell__ft">
+                    <switch checked bindchange="asyncSwitch" />
+                </view>
+            </view>
+            <view class="weui-cell weui-cell_input">
+                <view class="weui-cell__hd">
+                    <view class="weui-label">纠结主体</view>
+                </view>
+                <view class="weui-cell__bd">
+                    <input class="weui-input" placeholder="可以为空" bindinput="subjectInput"/>
+                </view>
+            </view>
+            <view class="weui-cells__title">决策参考</view>
+            <view class="weui-cells weui-cells_after-title">
+                <block wx:for="{{advice}}" wx:key="*this" wx:for-index="idx" >
+                    <view class="weui-cell weui-cell_input">
+                        <view class="weui-cell__bd">
+                            <input id="{{idx}}" class="weui-input" value="{{item}}"  placeholder="决策备选" bindblur="itemInput" />
+                        </view>
+                        <view class="weui-cell__ft" wx:if="{{idx >1}}" bindtap="delItem">
+                                <icon id="{{idx}}" type="cancel" size="23" color="#E64340"></icon>
+                        </view>
+                    </view>
+                </block>
+                <view class="weui-cell weui-cell_link">
+                    <view class="weui-cell__bd" bindtap="addMoreInput">添加更多</view>
+                </view>
+            </view>
+            <!-- 决策按钮 -->
+            <view class="weui-btn-area">
+                <button class="weui-btn" type="primary" bindtap="doChoose">呼叫咎儿</button>
+            </view>
+        </view>
+    </view>
+</view>

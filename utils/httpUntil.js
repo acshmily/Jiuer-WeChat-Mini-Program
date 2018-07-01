@@ -7,18 +7,18 @@ function postHttp(path, data, callback){
   var respone  = wx.request({
       url: getApp().globalData.SERVICE_URL+path,
       header: {
-        'Authorization': `Bearer ${jwt}`
+        'Authorization': `Bearer ${jtwUntil.getToken()}`
       },
       data: data,
       method:'POST',
       success: function (re){
 
-        return typeof callback == "function" && callback(re.data)
+        return typeof callback == "function" && callback(re)
         
       },
       fail: function (re){
 
-        return typeof callback == "function" && callback(re.data)
+        return typeof callback == "function" && callback(re)
        
       }
       
@@ -26,21 +26,22 @@ function postHttp(path, data, callback){
     //return respone
 }
 function getHttp(path,callback){
+  console.info("获取当前token:"+ jwt);
   var respone = wx.request({
     url: getApp().globalData.SERVICE_URL + path,
     header: {
-      'Authorization': `Bearer ${jwt}`
+      'Authorization': `Bearer ${jtwUntil.getToken()}`
     },
     method:'GET',
     success:function(re){
       
 
-      return typeof callback == "function" && callback(re.data)
+      return typeof callback == "function" && callback(re)
     },
     fail: function (re){
       
 
-      return typeof callback == "function" && callback(re.data)
+      return typeof callback == "function" && callback(re)
     }
   })
   //return respone
@@ -49,16 +50,16 @@ function delHttp(path,callback){
   wx.request({
     url: getApp().globalData.SERVICE_URL + path,
     header: {
-      'Authorization': `Bearer ${jwt}`
+      'Authorization': `Bearer ${jtwUntil.getToken()}`
     },
     method:'DELETE',
     success: function (re){
 
-      return typeof callback == "function" && callback(re.data)
+      return typeof callback == "function" && callback(re)
     },
     fail: function (re){
 
-      return typeof callback == "function" && callback(re.data)
+      return typeof callback == "function" && callback(re)
     }
   })
 }
@@ -67,17 +68,17 @@ function putHttp(path, data, callback){
   var res = wx.request({
     url: getApp().globalData.SERVICE_URL + path,
     header: {
-      'Authorization': `Bearer ${jwt}`
+      'Authorization': `Bearer ${jtwUntil.getToken()}`
     },
     method: 'PUT',
     data:data,
     success: function (re) {
     
-      return typeof callback == "function" && callback(re.data)
+      return typeof callback == "function" && callback(re)
       
     },
     fail: function (re) {
-      return typeof callback == "function" && callback(re.data)
+      return typeof callback == "function" && callback(re)
     }
   })
  

@@ -12,9 +12,9 @@ Page({
       },
       {
         'id': 1,
-        'title': 'Coming Soon',
-        'url': '',
-        'picUrl': '/images/native/comingsoon.png'
+        'title': '决策助手',
+        'url': '../decisions/index',
+        'picUrl': '/images/native/decisions.png'
       },
       {
         'id': 2,

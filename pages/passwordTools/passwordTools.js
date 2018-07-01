@@ -39,11 +39,20 @@ Page({
      var nextPageNum = this.data.RequestCache.pageable.pageNumber == 0 ? 2 : this.data.RequestCache.pageable.pageNumber +1
      console.info("当前页数")
      httpUtil.getHttp("/api/password?page="+nextPageNum,function(re){
-       that.setData({
-         SyncPasswordList: that.data.SyncPasswordList.concat(re.content),
-         RequestCache: re
-       })
-       wx.hideLoading()
+       if (re.statusCode == 200){
+          that.setData({
+            SyncPasswordList: that.data.SyncPasswordList.concat(re.data.content),
+          RequestCache: re.data
+          })
+        wx.hideLoading()
+       }else{
+         wx.showToast({
+           title: '云端访问失败,请稍后再说',
+           icon: 'loading',
+           duration: 2000
+         })
+       }
+
      })
    }
    },
@@ -80,10 +89,19 @@ Page({
       //加载信息
       httpUtil.getHttp("/api/password",function(re){
         console.info("收到返回:"+JSON.stringify(re))
-        that.setData({
-          SyncPasswordList: re.content,
-          RequestCache : re
-        })
+        if (re.statusCode == 200){
+          that.setData({
+            SyncPasswordList: re.data.content,
+            RequestCache: re.data
+          })
+        }else{
+          wx.showToast({
+            title: '获取失败,请稍等后再试',
+            icon: 'loading',
+            duration: 2000
+          })
+        }
+        
       })
       that.setData({
         loadingStatus: false
@@ -169,8 +187,15 @@ Page({
     } else if (password.length > 0 && this.data.switchRandomPass == false ){
     
       httpUtil.getHttp('/api/password/nextId',function(re){
+        
         console.info("收到请求:"+re)
-        psUtil.addLocalPassword(re,subject, password)
+        if (re.statusCode == 200){
+          psUtil.addLocalPassword(re.data, subject, password)
+        }else{
+          var _date = new Date()
+          psUtil.addLocalPassword(_date.getTime(), subject, password)
+        }
+      
         that.setData({
           LocalPasswordList: psUtil.getLocalPasswordList()
         })
@@ -235,10 +260,13 @@ Page({
                   res = httpUtil.putHttp("/api/password", body, function(re){
                     //收到的请求
                     console.info(re)
-                    psUtil.setPasswordSync(id,re.id)
-                    that.setData({
-                      LocalPasswordList: psUtil.getLocalPasswordList()
-                    })
+                    if (re.statusCode == 200){
+                      psUtil.setPasswordSync(id, re.data.id)
+                      that.setData({
+                        LocalPasswordList: psUtil.getLocalPasswordList()
+                      })
+                    }
+                   
                   })
                   }catch(e){
                     wx.showToast({
@@ -252,11 +280,13 @@ Page({
                   try {
                     console.info("发现云id.开始更新操作")
                     res = httpUtil.postHttp("/api/password/" + psObj.syncId, body,function(re){
-                      //收到的请求
-                      psUtil.setPasswordSync(id, re.id)
-                      that.setData({
-                        LocalPasswordList: psUtil.getLocalPasswordList()
-                      })
+                      if (re.statusCode == 200){
+                        //收到的请求
+                        psUtil.setPasswordSync(id, re.data.id)
+                        that.setData({
+                          LocalPasswordList: psUtil.getLocalPasswordList()
+                        })
+                      }
                     })
                   } catch (e) {
                     wx.showToast({
@@ -331,17 +361,25 @@ Page({
       return
     }
     httpUtil.getHttp("/api/password/"+id,function(re){
-      //展示
-      wx.showModal({
-        title: re.psubject,
-        content: re.psecure,
-        showCancel: false,
-        success: function (res) {
-          if (res.confirm) {
-            console.log('用户点击确定')
+      if (re.statusCode == 200){
+        //展示
+        wx.showModal({
+          title: re.data.psubject,
+          content: re.data.psecure,
+          showCancel: false,
+          success: function (res) {
+            if (res.confirm) {
+              console.log('用户点击确定')
+            }
           }
-        }
-      });
+          });
+      }else{
+        wx.showToast({
+          title: '获取失败,请稍后再试',
+          icon: 'loading',
+          duration: 2000
+        })
+      }
     })
   },
   operationSyncPassword:function(e){
