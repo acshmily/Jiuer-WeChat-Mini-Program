@@ -1,0 +1,59 @@
+<view class="page">
+    <view class="page__hd">
+        <view class="page__title">{{title}}</view>
+        <view class="page__desc">{{brandInfo.brandName}}</view>
+    </view>
+    <view class="page__bd">
+        <view class="weui-form-preview">
+            <view class="weui-form-preview__hd">
+                <view class="weui-form-preview__item">
+                    <view class="weui-form-preview__label">金额</view>
+                    <view class="weui-form-preview__value_in-hd">{{context.country}}{{context.price1}}</view>
+                </view>
+            </view>
+            <view class="weui-form-preview__bd">
+                <view class="weui-form-preview__item">
+                    <view class="weui-form-preview__label">颜色</view>
+                    <view class="weui-form-preview__value">{{context.colours}}</view>
+                </view>
+                <view class="weui-form-preview__item">
+                    <view class="weui-form-preview__label">备注</view>
+                    <view class="weui-form-preview__value">{{context.note}}</view>
+                </view>
+            </view>
+        </view>
+        <!-- 品牌-->
+        <view class="weui-cells__title">品牌</view>
+        <view class="weui-cells weui-cells_after-title">
+            <navigator url="../infanta/brand?id={{brandInfo.id}}" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+                <view class="weui-cell__bd">{{brandInfo.brandName}}</view>
+                <view class="weui-cell__ft weui-cell__ft_in-access">{{brandInfo.num}}</view>
+            </navigator>
+        </view>
+        <!-- 类型-->
+        <view class="weui-cells__title">类型</view>
+        <view class="weui-cells weui-cells_after-title">
+            <navigator url="../infanta/category?id={{typeInfo.id}}" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+                <view class="weui-cell__bd">{{typeInfo.typeName}}</view>
+                <view class="weui-cell__ft weui-cell__ft_in-access">{{typeInfo.num}}</view>
+            </navigator>
+        </view>
+        <!-- tag集合-->
+        <view class="weui-cells__title">Tag标签</view>
+        <view class="weui-cells weui-cells_after-title">
+            <block wx:for="{{tagCollect}}" wx:key="*this" wx:for-index="idx">
+                <navigator url="../infanta/tag?id={{item.tagId}}" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+                    <view class="weui-cell__bd">{{item.tagName}}</view>
+                    <view class="weui-cell__ft weui-cell__ft_in-access">{{item.tagNum}}</view>
+                </navigator>
+            </block>
+        </view>
+
+        <!-- 图片集合-->
+        <view class="weui-article__p">
+            <block wx:for="{{picUrl}}" wx:key="*this" wx:for-index="idx">
+            <image class="weui-article__img" src="{{item}}" mode="aspectFit"  />
+            </block>
+        </view>
+    </view>
+</view>

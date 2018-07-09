@@ -6,7 +6,12 @@
     "pages/passwordTools/passwordTools",
     "pages/joinus/joinus",
     "pages/decisions/index",
-    "pages/decisions/result"
+    "pages/decisions/result",
+    "pages/infanta/index",
+    "pages/infanta/item",
+    "pages/infanta/tag",
+    "pages/infanta/category",
+    "pages/infanta/brand"
   ],
   "window":{
     "backgroundTextStyle":"light",

@@ -18,9 +18,9 @@ Page({
       },
       {
         'id': 2,
-        'title': 'Coming Soon',
-        'url': '',
-        'picUrl': '/images/native/comingsoon.png'
+        'title': 'Lo裙助手',
+        'url': '../infanta/index',
+        'picUrl': '/images/native/crown.png'
       },
       {
         'id': 3,
