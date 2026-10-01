@@ -1,0 +1,13 @@
+<view class="tg-dissolve host-class {{playing ? 'is-playing' : ''}}">
+  <view class="tg-dissolve__body tg-dissolve__body--{{layout}} {{playing ? 'is-fade' : ''}}">
+    <slot></slot>
+  </view>
+  <view class="tg-dissolve__burst" wx:if="{{playing && shards.length}}">
+    <view
+      wx:for="{{shards}}"
+      wx:key="i"
+      class="tg-dissolve__shard tg-dissolve__shard--{{item.tone}} {{burstReady ? 'is-fly' : ''}}"
+      style="left:{{item.x}}%;top:{{item.y}}%;width:{{item.w}}px;height:{{item.h}}px;transition-delay:{{item.delay}}ms;--dx:{{item.dx}}px;--dy:{{item.dy}}px;--rot:{{item.rot}}deg;"
+    ></view>
+  </view>
+</view>

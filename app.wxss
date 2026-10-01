@@ -229,6 +229,25 @@ page {
   background: var(--tg-panel-alt);
 }
 
+/* 经 tg-dissolve 包裹：边框／底色在外壳 */
+.tg-path-dissolve {
+  margin-bottom: 16px;
+  background: var(--tg-surface);
+  border: 2px solid var(--tg-line);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.tg-path-dissolve--alt {
+  background: var(--tg-panel-alt);
+}
+
+.tg-path-card--plain {
+  margin-bottom: 0;
+  border: none;
+  background: transparent;
+}
+
 .tg-path-card__bar {
   display: flex;
   align-items: center;
@@ -303,10 +322,31 @@ page {
   margin-right: 6px;
   padding: 2px 8px;
   font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
   color: var(--tg-ink);
-  border: var(--tg-stroke) solid var(--tg-line);
-  border-radius: 0;
+  border: 2px solid var(--tg-line);
+  border-radius: 2px;
   background: var(--tg-panel-alt);
+}
+
+/* 札记标签色（人/局/险）；列表页亦有 notes-chip 专用样式 */
+.tg-pill--ren {
+  color: #FFFFFF;
+  background: var(--tg-ink);
+  border-color: var(--tg-ink);
+}
+
+.tg-pill--ju {
+  color: var(--tg-primary);
+  background: rgba(58, 111, 143, 0.1);
+  border-color: var(--tg-primary);
+}
+
+.tg-pill--xian {
+  color: var(--tg-accent);
+  background: rgba(168, 50, 50, 0.08);
+  border-color: var(--tg-accent);
 }
 
 .tg-section {
@@ -341,13 +381,13 @@ page {
 }
 
 .tg-option {
-  display: flex;
-  align-items: center;
+  display: block;
   background: var(--tg-surface);
   border: var(--tg-stroke) solid var(--tg-line);
   border-radius: 0;
   padding: 12px 14px;
   margin-bottom: 8px;
+  overflow: hidden;
 }
 
 .tg-option .tg-input {
@@ -590,8 +630,7 @@ page {
 }
 
 .tg-list-item {
-  display: flex;
-  align-items: stretch;
+  display: block;
   background: transparent;
   border: none;
   border-bottom: 2px solid var(--tg-line);
@@ -600,7 +639,7 @@ page {
   overflow: hidden;
 }
 
-.tg-list-item:nth-child(even) {
+.tg-list-item--alt {
   background: var(--tg-panel-alt);
 }
 
@@ -634,20 +673,27 @@ page {
 }
 
 .tg-empty {
-  margin-top: 56px;
-  padding: 0 12px;
-  text-align: center;
-  color: var(--tg-muted);
-  font-size: 14px;
+  margin-top: 36px;
+  padding: 24px 20px;
+  text-align: left;
+  color: var(--tg-ink);
+  font-size: 15px;
+  font-weight: 600;
   line-height: 1.7;
+  background: var(--tg-surface);
+  border: 2px solid var(--tg-line);
+  border-left: 8px solid var(--tg-primary);
+  border-radius: 2px;
 }
 
 .tg-empty-line {
   margin-bottom: 4px;
+  color: var(--tg-ink);
 }
 
 .tg-empty .tg-link {
-  margin-top: 16px;
+  margin-top: 18px;
+  font-weight: 700;
 }
 
 .tg-subject {

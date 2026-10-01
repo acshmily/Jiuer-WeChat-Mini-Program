@@ -1,12 +1,20 @@
 const decisionStore = require('../../utils/decisionStore.js')
 const voice = require('../../utils/togameVoice.js')
+const dissolve = require('../../utils/dissolve.js')
 
 Page({
   data: {
     list: [],
-    emptyText: voice.EMPTY_HISTORY
+    emptyText: voice.EMPTY_HISTORY,
+    dissolvingId: ''
   },
   onShow: function () {
+    if (this.data.dissolvingId) {
+      return
+    }
+    this.reloadList()
+  },
+  reloadList: function () {
     var records = decisionStore.list()
     var list = []
     for (var i = 0; i < records.length; i++) {
@@ -19,12 +27,30 @@ Page({
       })
     }
     this.setData({
-      list: list
+      list: list,
+      dissolvingId: ''
     })
+  },
+  playRemove: function (id) {
+    var self = this
+    if (!id || this.data.dissolvingId) {
+      return
+    }
+    this.setData({
+      dissolvingId: id
+    })
+    clearTimeout(this._dissolveTimer)
+    this._dissolveTimer = setTimeout(function () {
+      decisionStore.remove(id)
+      self.reloadList()
+    }, dissolve.DURATION)
   },
   remove: function (e) {
     var id = e.currentTarget.dataset.id
     var self = this
+    if (this.data.dissolvingId) {
+      return
+    }
     wx.showModal({
       title: '抹去',
       content: '抹去这一局？抹了不回。',
@@ -34,8 +60,7 @@ Page({
         if (!res.confirm) {
           return
         }
-        decisionStore.remove(id)
-        self.onShow()
+        self.playRemove(id)
       }
     })
   }

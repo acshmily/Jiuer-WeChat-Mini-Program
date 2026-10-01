@@ -1,4 +1,5 @@
 const voice = require('../../utils/togameVoice.js')
+const dissolve = require('../../utils/dissolve.js')
 
 var PENDING_KEY = 'pendingDecisionDraft'
 
@@ -11,7 +12,8 @@ Page({
     subject: '',
     options: [blankOption(), blankOption()],
     intro: '',
-    done: false
+    done: false,
+    dissolvingIdx: -1
   },
   subjectInput: function (e) {
     this.setData({
@@ -52,19 +54,30 @@ Page({
     })
   },
   delOption: function (e) {
-    var id = e.currentTarget.dataset.id
-    var options = []
-    for (var i = 0; i < this.data.options.length; i++) {
-      if (i === id) {
-        continue
-      }
-      options.push(this.data.options[i])
+    var id = Number(e.currentTarget.dataset.id)
+    var self = this
+    if (this.data.dissolvingIdx >= 0) {
+      return
     }
     this.setData({
-      options: options,
-      done: false,
-      intro: ''
+      dissolvingIdx: id
     })
+    clearTimeout(this._dissolveTimer)
+    this._dissolveTimer = setTimeout(function () {
+      var options = []
+      for (var i = 0; i < self.data.options.length; i++) {
+        if (i === id) {
+          continue
+        }
+        options.push(self.data.options[i])
+      }
+      self.setData({
+        options: options,
+        dissolvingIdx: -1,
+        done: false,
+        intro: ''
+      })
+    }, dissolve.DURATION)
   },
   doDissect: function () {
     var options = this.data.options

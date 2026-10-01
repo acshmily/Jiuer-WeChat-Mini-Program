@@ -13,5 +13,13 @@
     "navigationBarBackgroundColor": "#F4F6F8",
     "navigationBarTitleText": "咎儿助手",
     "navigationBarTextStyle": "black"
+  },
+  "permission": {
+    "scope.writePhotosAlbum": {
+      "desc": "用于将定论海报写入你的相册，便于转发朋友圈"
+    }
+  },
+  "usingComponents": {
+    "tg-dissolve": "/components/tg-dissolve/tg-dissolve"
   }
 }

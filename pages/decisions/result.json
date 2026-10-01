@@ -1,5 +1,7 @@
 {
   "navigationBarTitleText": "咎儿的定论",
   "navigationBarBackgroundColor": "#F4F6F8",
-  "backgroundColor": "#F4F6F8"
+  "backgroundColor": "#F4F6F8",
+  "enableShareAppMessage": true,
+  "enableShareTimeline": true
 }

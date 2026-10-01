@@ -1,5 +1,12 @@
 const noteStore = require('../../utils/noteStore.js')
 const voice = require('../../utils/togameVoice.js')
+const dissolve = require('../../utils/dissolve.js')
+
+var TAG_OPTIONS = [
+  { label: '人', key: 'ren' },
+  { label: '局', key: 'ju' },
+  { label: '险', key: 'xian' }
+]
 
 Page({
   data: {
@@ -7,7 +14,8 @@ Page({
     isEdit: false,
     body: '',
     tag: '局',
-    tags: noteStore.TAGS
+    tags: TAG_OPTIONS,
+    dissolving: false
   },
   onLoad: function (query) {
     var id = query && query.id ? String(query.id) : ''
@@ -16,7 +24,8 @@ Page({
         id: '',
         isEdit: false,
         body: '',
-        tag: '局'
+        tag: '局',
+        dissolving: false
       })
       return
     }
@@ -35,7 +44,8 @@ Page({
       id: note.id,
       isEdit: true,
       body: note.body,
-      tag: note.tag
+      tag: note.tag,
+      dissolving: false
     })
   },
   pickTag: function (e) {
@@ -49,6 +59,9 @@ Page({
     })
   },
   save: function () {
+    if (this.data.dissolving) {
+      return
+    }
     var body = String(this.data.body || '').trim()
     if (!body) {
       wx.showModal({
@@ -66,6 +79,10 @@ Page({
   },
   remove: function () {
     var id = this.data.id
+    var self = this
+    if (!id || this.data.dissolving) {
+      return
+    }
     wx.showModal({
       title: '抹去',
       content: '抹去这条札记？抹了不回。',
@@ -75,8 +92,14 @@ Page({
         if (!res.confirm) {
           return
         }
-        noteStore.remove(id)
-        wx.navigateBack()
+        self.setData({
+          dissolving: true
+        })
+        clearTimeout(self._dissolveTimer)
+        self._dissolveTimer = setTimeout(function () {
+          noteStore.remove(id)
+          wx.navigateBack()
+        }, dissolve.DURATION)
       }
     })
   }

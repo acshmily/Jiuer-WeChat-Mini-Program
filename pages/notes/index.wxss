@@ -1,1 +1,238 @@
-/* page styles live in app.wxss */
+/* 谋略札记：刀语硬边舞台，冷白底 + 墨线 + 冰蓝点缀 */
+
+.notes-page {
+  position: relative;
+}
+
+.notes-page::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 42%;
+  height: 180px;
+  background: linear-gradient(
+    135deg,
+    rgba(58, 111, 143, 0.08) 0%,
+    rgba(58, 111, 143, 0.08) 48%,
+    transparent 49%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.notes-head,
+.notes-rule,
+.notes-list,
+.notes-empty {
+  position: relative;
+  z-index: 1;
+}
+
+.notes-head {
+  padding-bottom: 4px;
+}
+
+.notes-caption {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--tg-accent);
+  letter-spacing: 0.28em;
+  line-height: 1.2;
+}
+
+.notes-aside {
+  margin-top: 10px;
+  color: var(--tg-muted);
+  font-size: 14px;
+  line-height: 1.65;
+  max-width: 22em;
+}
+
+.notes-head-cta {
+  display: inline-block;
+  margin-top: 16px;
+  padding: 8px 14px;
+  color: var(--tg-primary);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  border: 2px solid var(--tg-primary);
+  border-radius: 2px;
+  background: var(--tg-surface);
+}
+
+.notes-rule {
+  margin: 20px 0 0;
+  height: 2px;
+  background: var(--tg-ink);
+}
+
+/* —— 列表：硬边分镜格 —— */
+.notes-list {
+  margin-top: 16px;
+}
+
+.notes-item {
+  display: block;
+  margin-bottom: 10px;
+  background: var(--tg-surface);
+  border: 2px solid var(--tg-line);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.notes-item--alt {
+  background: var(--tg-panel-alt);
+}
+
+.notes-item-main {
+  flex: 1;
+  min-width: 0;
+  padding: 14px 12px 14px 14px;
+}
+
+.notes-item-title {
+  display: flex;
+  align-items: flex-start;
+  font-size: 15px;
+  color: var(--tg-ink);
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.notes-item-preview {
+  flex: 1;
+  min-width: 0;
+  padding-top: 1px;
+}
+
+.notes-item-meta {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--tg-muted);
+  letter-spacing: 0.02em;
+}
+
+.notes-item-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 56px;
+  padding: 0 12px;
+  color: var(--tg-accent);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  border-left: 2px solid var(--tg-line);
+  background: rgba(168, 50, 50, 0.04);
+}
+
+/* 人 / 局 / 险 —— 扁平等级色块 */
+.notes-chip {
+  display: inline-block;
+  flex-shrink: 0;
+  margin-right: 8px;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  border: 2px solid var(--tg-line);
+  border-radius: 2px;
+  line-height: 1.35;
+}
+
+.notes-chip--ren {
+  color: #FFFFFF;
+  background: var(--tg-ink);
+  border-color: var(--tg-ink);
+}
+
+.notes-chip--ju {
+  color: var(--tg-primary);
+  background: rgba(58, 111, 143, 0.1);
+  border-color: var(--tg-primary);
+}
+
+.notes-chip--xian {
+  color: var(--tg-accent);
+  background: rgba(168, 50, 50, 0.08);
+  border-color: var(--tg-accent);
+}
+
+/* —— 空态：一块字幕板，单一主 CTA —— */
+.notes-empty {
+  margin-top: 28px;
+}
+
+.notes-empty-panel {
+  position: relative;
+  padding: 28px 22px 26px;
+  background: var(--tg-surface);
+  border: 2px solid var(--tg-line);
+  border-left: 8px solid var(--tg-primary);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.notes-empty-panel::after {
+  content: "";
+  position: absolute;
+  right: -24px;
+  bottom: -28px;
+  width: 120px;
+  height: 120px;
+  background: linear-gradient(
+    135deg,
+    transparent 46%,
+    rgba(18, 21, 28, 0.06) 47%,
+    rgba(18, 21, 28, 0.06) 52%,
+    transparent 53%
+  );
+  pointer-events: none;
+}
+
+.notes-empty-mark {
+  display: flex;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.notes-empty-tag {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--tg-primary);
+  letter-spacing: 0.28em;
+}
+
+.notes-empty-slash {
+  flex: 1;
+  margin-left: 12px;
+  height: 2px;
+  background: var(--tg-line);
+  max-width: 72px;
+}
+
+.notes-empty-copy {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--tg-ink);
+  line-height: 1.7;
+  letter-spacing: 0.02em;
+  max-width: 16em;
+}
+
+.notes-empty-cta {
+  display: inline-block;
+  margin-top: 22px;
+  padding: 0 22px;
+  height: 44px;
+  line-height: 40px;
+  color: #FFFFFF;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  background: var(--tg-ink);
+  border: 2px solid var(--tg-ink);
+  border-radius: 2px;
+}

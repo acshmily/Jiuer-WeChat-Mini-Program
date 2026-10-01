@@ -1,5 +1,6 @@
 const decisionStore = require('../../utils/decisionStore.js')
 const voice = require('../../utils/togameVoice.js')
+const dissolve = require('../../utils/dissolve.js')
 
 var PENDING_KEY = 'pendingDecisionDraft'
 
@@ -7,13 +8,15 @@ Page({
   data: {
     subject: '',
     advice: ['', ''],
-    aside: ''
+    aside: '',
+    dissolvingIdx: -1
   },
   onLoad: function () {
     this.setData({
       subject: '',
       advice: ['', ''],
-      aside: voice.dailyLine()
+      aside: voice.dailyLine(),
+      dissolvingIdx: -1
     })
   },
   onShow: function () {
@@ -57,18 +60,29 @@ Page({
     })
   },
   delItem: function (e) {
-    var id = e.currentTarget.dataset.id
-    var tempList = this.data.advice
-    var newList = []
-    for (var i = 0; i < tempList.length; i++) {
-      if (i == id) {
-        continue
-      }
-      newList.push(tempList[i])
+    var id = Number(e.currentTarget.dataset.id)
+    var self = this
+    if (this.data.dissolvingIdx >= 0) {
+      return
     }
     this.setData({
-      advice: newList
+      dissolvingIdx: id
     })
+    clearTimeout(this._dissolveTimer)
+    this._dissolveTimer = setTimeout(function () {
+      var tempList = self.data.advice
+      var newList = []
+      for (var i = 0; i < tempList.length; i++) {
+        if (i === id) {
+          continue
+        }
+        newList.push(tempList[i])
+      }
+      self.setData({
+        advice: newList,
+        dissolvingIdx: -1
+      })
+    }, dissolve.DURATION)
   },
   itemInput: function (e) {
     var tempList = this.data.advice.slice()

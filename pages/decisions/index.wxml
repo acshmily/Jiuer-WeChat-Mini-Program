@@ -16,10 +16,15 @@
   <view class="tg-section tg-section--tight">
     <view class="tg-label">可走之路</view>
     <block wx:for="{{advice}}" wx:key="*this" wx:for-index="idx">
-      <view class="tg-option">
+      <tg-dissolve
+        host-class="tg-option"
+        layout="row"
+        count="14"
+        playing="{{dissolvingIdx === idx}}"
+      >
         <input id="{{idx}}" class="tg-input" value="{{item}}" placeholder="一条路" bindinput="itemInput" />
         <view class="tg-remove" wx:if="{{idx > 1}}" data-id="{{idx}}" bindtap="delItem">去掉</view>
-      </view>
+      </tg-dissolve>
     </block>
     <view class="tg-add" bindtap="addMoreInput">再添一路</view>
   </view>

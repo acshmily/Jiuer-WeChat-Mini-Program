@@ -1,22 +1,39 @@
-<view class="tg-page">
-  <view class="tg-brow">谋略札记</view>
-  <view class="tg-aside">「短记、本地、不外传。人、局、险——标清楚再落笔。」</view>
-  <navigator url="edit" class="tg-link" hover-class="none">新开一条</navigator>
-
-  <view class="tg-list" wx:if="{{list.length > 0}}">
-    <view class="tg-list-item" wx:for="{{list}}" wx:key="id">
-      <navigator url="edit?id={{item.id}}" class="tg-list-main" hover-class="none">
-        <view class="tg-list-title">
-          <text class="tg-pill">{{item.tag}}</text>{{item.preview}}
-        </view>
-        <view class="tg-list-meta">{{item.updatedAt}}</view>
-      </navigator>
-      <view class="tg-list-action" catchtap="remove" data-id="{{item.id}}">抹去</view>
-    </view>
+<view class="tg-page notes-page">
+  <view class="notes-head">
+    <view class="notes-caption">札／本地</view>
+    <view class="notes-aside">短记、本地、不外传。人、局、险——标清楚再落笔。</view>
+    <navigator wx:if="{{list.length > 0}}" url="edit" class="notes-head-cta" hover-class="none">新开一条</navigator>
   </view>
 
-  <view class="tg-empty" wx:else>
-    <view class="tg-empty-line">{{emptyText}}</view>
-    <navigator url="edit" class="tg-link" hover-class="none">新开一条</navigator>
+  <view class="notes-rule"></view>
+
+  <view class="notes-list" wx:if="{{list.length > 0}}">
+    <tg-dissolve
+      wx:for="{{list}}"
+      wx:key="id"
+      host-class="notes-item {{index % 2 === 1 ? 'notes-item--alt' : ''}}"
+      layout="row-stretch"
+      playing="{{dissolvingId === item.id}}"
+    >
+      <navigator url="edit?id={{item.id}}" class="notes-item-main" hover-class="none">
+        <view class="notes-item-title">
+          <text class="notes-chip notes-chip--{{item.tagKey}}">{{item.tag}}</text>
+          <text class="notes-item-preview">{{item.preview}}</text>
+        </view>
+        <view class="notes-item-meta">{{item.updatedAt}}</view>
+      </navigator>
+      <view class="notes-item-action" catchtap="remove" data-id="{{item.id}}">抹去</view>
+    </tg-dissolve>
+  </view>
+
+  <view class="notes-empty" wx:else>
+    <view class="notes-empty-panel">
+      <view class="notes-empty-mark">
+        <view class="notes-empty-tag">空／札</view>
+        <view class="notes-empty-slash"></view>
+      </view>
+      <view class="notes-empty-copy">{{emptyText}}</view>
+      <navigator url="edit" class="notes-empty-cta" hover-class="none">新开一条</navigator>
+    </view>
   </view>
 </view>

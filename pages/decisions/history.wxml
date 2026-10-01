@@ -3,13 +3,19 @@
   <view class="tg-aside">「最近三十局。再算一局，只会改原来那条，不会另开新账。」</view>
 
   <view class="tg-list" wx:if="{{list.length > 0}}">
-    <view class="tg-list-item" wx:for="{{list}}" wx:key="id">
+    <tg-dissolve
+      wx:for="{{list}}"
+      wx:key="id"
+      host-class="tg-list-item {{index % 2 === 1 ? 'tg-list-item--alt' : ''}}"
+      layout="row-stretch"
+      playing="{{dissolvingId === item.id}}"
+    >
       <navigator url="result?id={{item.id}}" class="tg-list-main" hover-class="none">
         <view class="tg-list-title">{{item.subject}}</view>
         <view class="tg-list-meta">{{item.createdAt}} · 当前首选 {{item.top}}</view>
       </navigator>
       <view class="tg-list-action" catchtap="remove" data-id="{{item.id}}">抹去</view>
-    </view>
+    </tg-dissolve>
   </view>
 
   <view class="tg-empty" wx:else>

@@ -1,1 +1,54 @@
-/* page styles live in app.wxss */
+/* 谋略札记 · 编辑：与列表同套硬边标签语汇 */
+
+.notes-edit-dissolve {
+  display: block;
+  width: 100%;
+  min-height: 100%;
+  box-sizing: border-box;
+}
+
+.notes-edit-caption {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--tg-accent);
+  letter-spacing: 0.28em;
+  line-height: 1.2;
+}
+
+.notes-edit-field {
+  border-width: 2px;
+  border-radius: 2px;
+}
+
+.notes-edit-tag {
+  margin: 4px;
+  min-width: 52px;
+  padding: 8px 16px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--tg-muted);
+  border: 2px solid var(--tg-line-soft);
+  border-radius: 2px;
+  background: var(--tg-surface);
+  box-sizing: border-box;
+}
+
+.notes-edit-tag--ren.is-on {
+  color: #FFFFFF;
+  background: var(--tg-ink);
+  border-color: var(--tg-ink);
+}
+
+.notes-edit-tag--ju.is-on {
+  color: #FFFFFF;
+  background: var(--tg-primary);
+  border-color: var(--tg-primary);
+}
+
+.notes-edit-tag--xian.is-on {
+  color: #FFFFFF;
+  background: var(--tg-accent);
+  border-color: var(--tg-accent);
+}

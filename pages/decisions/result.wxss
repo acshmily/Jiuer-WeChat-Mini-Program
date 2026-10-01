@@ -1,1 +1,60 @@
-/* page styles live in app.wxss */
+/* 主 CTA 后再出现的次级分享行 */
+.tg-share-actions {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+
+.tg-share-actions .tg-primary-btn,
+.tg-share-actions .tg-ghost-btn {
+  flex: 1;
+  margin-top: 0;
+  min-width: 0;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  line-height: 40px;
+  height: 40px;
+}
+
+.tg-share-actions .tg-share-btn {
+  margin-right: 8px;
+}
+
+.tg-share-btn[disabled],
+.tg-share-save[disabled] {
+  opacity: 0.55;
+}
+
+.tg-page > .tg-text-action {
+  margin-top: 8px;
+  text-align: center;
+  padding: 12px 4px;
+}
+
+/*
+ * 离屏 Canvas 2D：
+ * - 宿主 0×0 + overflow hidden，挡住原生层
+ * - 画布本身仍保持 750×1334 逻辑尺寸供绘制／导出
+ * - 勿用 display:none / visibility:hidden（会禁绘）
+ */
+.tg-share-canvas-host {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  z-index: -999;
+}
+
+.tg-share-canvas {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  width: 750px;
+  height: 1334px;
+  pointer-events: none;
+}

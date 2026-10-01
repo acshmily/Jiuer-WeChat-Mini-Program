@@ -1,0 +1,90 @@
+/* 刀语扁平：硬边矩形碎裂，墨／冰／朱，无柔光／无圆点闪粉 */
+
+.tg-dissolve {
+  position: relative;
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.tg-dissolve.is-playing {
+  overflow: hidden;
+  pointer-events: none;
+  border-color: transparent !important;
+  background: transparent !important;
+}
+
+.tg-dissolve__body {
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.tg-dissolve__body--stack {
+  display: block;
+}
+
+.tg-dissolve__body--row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  min-width: 0;
+}
+
+.tg-dissolve__body--row-stretch {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  min-width: 0;
+}
+
+.tg-dissolve__body.is-fade {
+  opacity: 0;
+  transition: opacity 160ms linear;
+}
+
+.tg-dissolve__burst {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.tg-dissolve__shard {
+  position: absolute;
+  margin-left: -3px;
+  margin-top: -2px;
+  border-radius: 0;
+  box-shadow: none;
+  opacity: 1;
+  transform: translate(0, 0) rotate(0deg) scale(1);
+  transition-property: transform, opacity;
+  transition-duration: 420ms;
+  transition-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1), linear;
+}
+
+.tg-dissolve__shard.is-fly {
+  opacity: 0;
+  transform: translate(var(--dx, 24px), var(--dy, -16px)) rotate(var(--rot, 12deg)) scale(0.28);
+}
+
+.tg-dissolve__shard--ink {
+  background: #12151C;
+}
+
+.tg-dissolve__shard--ice {
+  background: #3A6F8F;
+}
+
+.tg-dissolve__shard--crimson {
+  background: #A83232;
+}
+
+.tg-dissolve__shard--soft {
+  background: #C5CCD6;
+}

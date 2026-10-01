@@ -29,5 +29,30 @@
   </view>
 
   <button class="tg-primary-btn" bindtap="reroll">不服？再算一局</button>
-  <button class="tg-ghost-btn" bindtap="returnBefore">返回呈上抉择</button>
+
+  <view class="tg-share-actions">
+    <button
+      class="tg-primary-btn tg-share-btn"
+      open-type="share"
+      disabled="{{posterBusy}}"
+      bindtap="onShareTap"
+    >分享给好友</button>
+    <button
+      class="tg-ghost-btn tg-share-save"
+      disabled="{{posterBusy}}"
+      bindtap="savePoster"
+    >保存定论图</button>
+  </view>
+
+  <view class="tg-text-action" bindtap="returnBefore">返回呈上抉择</view>
+
+  <!-- 离屏海报画布：裁切宿主 + 视口外，避免 type=2d 原生层露馅 -->
+  <view class="tg-share-canvas-host">
+    <canvas
+      type="2d"
+      id="sharePosterCanvas"
+      class="tg-share-canvas"
+      style="width: 750px; height: 1334px;"
+    ></canvas>
+  </view>
 </view>
