@@ -1,31 +1,33 @@
-<view class="page">
-    <view class="page__hd">
-        <view class="page__title">结果发表{{emjoi}}</view>
-        <view class="page__desc">{{subject}}</view>
-    </view>
-    <!-- 结果渲染 -->
-    <view class="page__bd page__bd_spacing">
-        <block wx:for="{{dealResult}}" wx:key="*this" wx:for-index="idx" >
-            <view class="weui-panel__bd">
-                <view class="weui-media-box weui-media-box_text">
-                    <view class="weui-media-box__title weui-media-box__title_in-text">{{item.option}}</view>
-                    <view class="weui-media-box__desc">
-                        <view class="weui-progress">
-                            <view class="weui-progress__bar">
-                                <progress percent="{{item.score}}" stroke-width="3" />
-                            </view>
+<view class="tg-page">
+  <view class="tg-result-head">
+    <view class="tg-brow">定论</view>
+    <view class="tg-subject" wx:if="{{subject}}">议题：{{subject}}</view>
+    <view class="tg-subject" wx:else>议题未立——本官仍可定夺。</view>
+  </view>
 
-                        </view>
-                    </view>
-                </view>
+  <view class="tg-verdict {{verdictFlash ? 'is-flash' : ''}}" wx:if="{{top}}">
+    <view class="tg-verdict-label">此局／首选</view>
+    <view class="tg-verdict-title">{{top.option}}</view>
+    <view class="tg-verdict-score">{{top.score}}%</view>
+    <view class="tg-verdict-rule"></view>
+    <view class="tg-voice">{{voiceLine}}</view>
+  </view>
 
-            </view>
-        </block>
-    </view>
-    <!-- 返回按钮 -->
-    <view class="weui-msg__opr-area">
-        <view class="weui-btn-area">
-            <button class="weui-btn" type="primary" bindtap="returnBefore">返回决策</button>
+  <view class="tg-rank">
+    <view class="tg-rank-label">各路占比</view>
+    <block wx:for="{{dealResult}}" wx:key="*this" wx:for-index="idx">
+      <view class="tg-rank-item {{idx > 0 ? 'is-rest' : ''}}">
+        <view class="tg-rank-row">
+          <view class="tg-rank-name">{{item.option}}</view>
+          <view class="tg-rank-pct">{{item.score}}%</view>
         </view>
-    </view>
+        <view class="tg-bar">
+          <view class="tg-bar-fill {{item.isTop ? 'is-top' : ''}}" style="width: {{item.barWidth}}%;"></view>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <button class="tg-primary-btn" bindtap="reroll">不服？再算一局</button>
+  <button class="tg-ghost-btn" bindtap="returnBefore">返回呈上抉择</button>
 </view>

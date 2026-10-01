@@ -1,22 +1,17 @@
 {
-  "pages":[
-    "pages/index/index",
-    "pages/logs/logs",
-    "pages/native/native",
-    "pages/passwordTools/passwordTools",
-    "pages/joinus/joinus",
+  "pages": [
     "pages/decisions/index",
     "pages/decisions/result",
-    "pages/infanta/index",
-    "pages/infanta/item",
-    "pages/infanta/tag",
-    "pages/infanta/category",
-    "pages/infanta/brand"
+    "pages/decisions/history",
+    "pages/dissect/index",
+    "pages/notes/index",
+    "pages/notes/edit"
   ],
-  "window":{
-    "backgroundTextStyle":"light",
-    "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "WeChat",
-    "navigationBarTextStyle":"black"
+  "window": {
+    "backgroundTextStyle": "light",
+    "backgroundColor": "#F4F6F8",
+    "navigationBarBackgroundColor": "#F4F6F8",
+    "navigationBarTitleText": "咎儿助手",
+    "navigationBarTextStyle": "black"
   }
 }

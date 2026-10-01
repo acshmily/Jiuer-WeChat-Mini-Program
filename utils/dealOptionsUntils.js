@@ -35,6 +35,54 @@ var objectArraySort = function (keyName) {
         else return 0
     }
 }
+/**
+ * 同一主题、同一选项顺序、同一个 seed，占比不变。
+ * 返回值保持输入顺序，分数为合计 100 的两位小数字符串。
+ */
+function scoreOptions(subject, options, seed) {
+    var scored = []
+    var totalWeight = 0
+    var i
+    for (i = 0; i < options.length; i++) {
+        var weight = crc32(String(seed) + '|' + subject + '|' + i + '|' + options[i])
+        scored.push({
+            option: options[i],
+            weight: weight
+        })
+        totalWeight += weight
+    }
+    if (scored.length === 0) {
+        return []
+    }
+    var scoreFix = 10000
+    if (totalWeight === 0) {
+        var even = 10000 / scored.length
+        for (i = 0; i < scored.length; i++) {
+            scored[i].score = even
+            scoreFix -= even
+        }
+    } else {
+        for (i = 0; i < scored.length; i++) {
+            scored[i].score = scored[i].weight * 10000 / totalWeight
+            scoreFix -= scored[i].score
+        }
+    }
+    if (scoreFix !== 0) {
+        scored[scored.length - 1].score += scoreFix
+    }
+    for (i = 0; i < scored.length; i++) {
+        scored[i].score = (scored[i].score / 100).toFixed(2)
+        delete scored[i].weight
+    }
+    return scored
+}
+
+function rankByScore(items) {
+    return items.slice().sort(function (a, b) {
+        return parseFloat(b.score) - parseFloat(a.score)
+    })
+}
+
 var randomEmoji =function(){
     let list = ['(=^･ｪ･^=)','(=^‥^=)','( =①ω①=)','(=^･^=)','o(^・x・^)o','d(=^･ω･^=)b','V(=^･ω･^=)v','(=ＴェＴ=)',
         '(=;ェ;=)','(=｀ω´=)','ヽ(=^･ω･^=)丿','(=^･ω･^)y＝','＼(=^‥^)/’`','(^-人-^)','ヽ(^‥^=ゞ)','(^・ω・^ )',
@@ -46,4 +94,6 @@ var randomEmoji =function(){
 module.exports.dealOptions = crc32
 exports.makeCRCTable = makeCRCTable
 exports.objectArraySort = objectArraySort
+exports.scoreOptions = scoreOptions
+exports.rankByScore = rankByScore
 exports.randomEmoji = randomEmoji

@@ -1,0 +1,33 @@
+<view class="tg-page">
+  <view class="tg-brow">{{isEdit ? '改札' : '新札'}}</view>
+  <view class="tg-aside">写给自己看的短记。标签只标人、局、险。</view>
+
+  <view class="tg-section">
+    <view class="tg-label">标签</view>
+    <view class="tg-tag-row">
+      <view
+        wx:for="{{tags}}"
+        wx:key="*this"
+        class="tg-tag {{tag === item ? 'is-on' : ''}}"
+        data-tag="{{item}}"
+        bindtap="pickTag"
+      >{{item}}</view>
+    </view>
+  </view>
+
+  <view class="tg-section">
+    <view class="tg-label">正文</view>
+    <view class="tg-field">
+      <textarea
+        class="tg-textarea"
+        maxlength="500"
+        placeholder="人怎么看、局怎么走、险在哪里——择要记。"
+        value="{{body}}"
+        bindinput="bodyInput"
+      />
+    </view>
+  </view>
+
+  <button class="tg-primary-btn" bindtap="save">收进札记</button>
+  <button class="tg-ghost-btn tg-ghost-btn--danger" wx:if="{{isEdit}}" bindtap="remove">抹去此条</button>
+</view>

@@ -1,35 +1,666 @@
-@import 'weui.wxss';
+page {
+  --tg-bg: #F4F6F8;
+  --tg-ink: #12151C;
+  --tg-muted: #5A6573;
+  --tg-primary: #3A6F8F;
+  --tg-accent: #A83232;
+  --tg-line: #12151C;
+  --tg-line-soft: #C5CCD6;
+  --tg-surface: #FFFFFF;
+  --tg-panel-alt: #E8F0F4;
+  --tg-radius: 3px;
+  --tg-stroke: 1.5px;
 
-page{
-    background-color: #F8F8F8;
-    font-size: 16px;
-    font-family: -apple-system-font,Helvetica Neue,Helvetica,sans-serif;
-}
-.page__hd {
-    padding: 40px;
-}
-.page__bd {
-    padding-bottom: 40px;
-}
-.page__bd_spacing {
-    padding-left: 15px;
-    padding-right: 15px;
-}
-
-.page__ft{
-    padding-bottom: 10px;
-    text-align: center;
-}
-
-.page__title {
-    text-align: left;
-    font-size: 20px;
-    font-weight: 400;
+  background-color: var(--tg-bg);
+  background-image: linear-gradient(
+    135deg,
+    rgba(58, 111, 143, 0.045) 0%,
+    transparent 42%,
+    transparent 58%,
+    rgba(18, 21, 28, 0.03) 100%
+  );
+  color: var(--tg-ink);
+  font-size: 16px;
+  font-family: -apple-system-font, "PingFang SC", "Helvetica Neue", Helvetica, sans-serif;
+  min-height: 100%;
 }
 
-.page__desc {
-    margin-top: 5px;
-    color: #888888;
-    text-align: left;
-    font-size: 14px;
+.tg-page {
+  padding: 28px 20px 48px;
+  box-sizing: border-box;
+}
+
+/* 兼容旧 class：不再使用纸纹，改为舞台斜向色块 */
+.tg-page--paper {
+  background-image: none;
+}
+
+/* 字阶：眉题 / 正文 / 旁白 / 标签 */
+.tg-brow {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--tg-ink);
+  line-height: 1.25;
+}
+
+.tg-brand {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--tg-ink);
+  line-height: 1.25;
+}
+
+.tg-aside {
+  margin-top: 10px;
+  color: var(--tg-muted);
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+/* 今日军略：硬边字幕条 */
+.tg-daily {
+  margin-top: 18px;
+  padding: 14px 16px;
+  background: var(--tg-surface);
+  border: var(--tg-stroke) solid var(--tg-line);
+  border-left: 4px solid var(--tg-accent);
+  border-radius: 0;
+}
+
+.tg-daily-tag {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--tg-accent);
+  letter-spacing: 0.28em;
+  margin-bottom: 8px;
+}
+
+.tg-daily-line {
+  font-size: 16px;
+  color: var(--tg-ink);
+  line-height: 1.65;
+  font-weight: 500;
+}
+
+.tg-link {
+  display: inline-block;
+  margin-top: 18px;
+  color: var(--tg-primary);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.tg-link--quiet {
+  margin-top: 14px;
+  font-weight: 500;
+}
+
+.tg-nav {
+  margin-top: 18px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.tg-nav .tg-link {
+  margin-top: 0;
+}
+
+.tg-nav-sep {
+  margin: 0 8px;
+  color: var(--tg-line-soft);
+  font-size: 14px;
+}
+
+.tg-tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: -4px;
+}
+
+.tg-tag {
+  margin: 4px;
+  padding: 6px 14px;
+  font-size: 13px;
+  color: var(--tg-muted);
+  border: var(--tg-stroke) solid var(--tg-line-soft);
+  border-radius: var(--tg-radius);
+  background: var(--tg-surface);
+}
+
+.tg-tag.is-on {
+  color: #FFFFFF;
+  background: var(--tg-ink);
+  border-color: var(--tg-ink);
+}
+
+.tg-subfield {
+  margin-top: 10px;
+  background: var(--tg-surface);
+  border: var(--tg-stroke) solid var(--tg-line);
+  border-radius: var(--tg-radius);
+  padding: 12px 14px;
+}
+
+.tg-sublabel {
+  font-size: 12px;
+  color: var(--tg-muted);
+  margin-bottom: 6px;
+  letter-spacing: 0.08em;
+}
+
+.tg-textarea {
+  width: 100%;
+  min-height: 72px;
+  font-size: 15px;
+  color: var(--tg-ink);
+  line-height: 1.55;
+}
+
+.tg-comment {
+  margin-top: 10px;
+  padding: 12px 14px;
+  background: var(--tg-panel-alt);
+  border: var(--tg-stroke) solid var(--tg-line);
+  border-left: 4px solid var(--tg-primary);
+  border-radius: 0;
+  font-size: 14px;
+  color: var(--tg-ink);
+  line-height: 1.65;
+  opacity: 1;
+  transition: opacity 0.35s ease;
+}
+
+.tg-comment.is-enter {
+  animation: tg-fade-in 0.4s ease;
+}
+
+@keyframes tg-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.tg-block {
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid var(--tg-line);
+}
+
+.tg-block:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.tg-block-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--tg-ink);
+  margin-bottom: 8px;
+}
+
+/* 拆解：硬边字段，利冰蓝 / 弊朱红 */
+.tg-hint {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--tg-muted);
+  letter-spacing: 0;
+}
+
+.tg-req {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--tg-accent);
+  letter-spacing: 0.08em;
+}
+
+.tg-path-card {
+  margin-bottom: 16px;
+  padding: 14px;
+  background: var(--tg-surface);
+  border: 2px solid var(--tg-line);
+  border-radius: 0;
+  box-sizing: border-box;
+}
+
+.tg-path-card:nth-child(even) {
+  background: var(--tg-panel-alt);
+}
+
+.tg-path-card__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.tg-path-card__ord {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--tg-ink);
+  letter-spacing: 0.16em;
+}
+
+.tg-path-card__field {
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  background: var(--tg-surface);
+  border: var(--tg-stroke) solid var(--tg-line);
+  border-radius: 0;
+  box-sizing: border-box;
+}
+
+.tg-path-card__field:last-child {
+  margin-bottom: 0;
+}
+
+.tg-path-card__label {
+  font-size: 13px;
+  color: var(--tg-ink);
+  font-weight: 700;
+  margin-bottom: 8px;
+  letter-spacing: 0.08em;
+}
+
+.tg-path-card__pair {
+  display: flex;
+  flex-direction: column;
+}
+
+.tg-path-card__field--pro {
+  border-color: var(--tg-line);
+  border-left: 4px solid var(--tg-primary);
+  background: rgba(58, 111, 143, 0.06);
+}
+
+.tg-path-card__field--con {
+  border-color: var(--tg-line);
+  border-left: 4px solid var(--tg-accent);
+  background: rgba(168, 50, 50, 0.05);
+}
+
+.tg-path-card__area {
+  width: 100%;
+  min-height: 56px;
+  font-size: 15px;
+  color: var(--tg-ink);
+  line-height: 1.5;
+}
+
+.tg-path-card .tg-input {
+  min-height: 28px;
+}
+
+.tg-path-card .tg-comment {
+  margin-top: 4px;
+  margin-bottom: 0;
+}
+
+.tg-pill {
+  display: inline-block;
+  margin-right: 6px;
+  padding: 2px 8px;
+  font-size: 12px;
+  color: var(--tg-ink);
+  border: var(--tg-stroke) solid var(--tg-line);
+  border-radius: 0;
+  background: var(--tg-panel-alt);
+}
+
+.tg-section {
+  margin-top: 28px;
+}
+
+/* 首页：今日一句 → 表单更紧 */
+.tg-section--tight {
+  margin-top: 20px;
+}
+
+.tg-label {
+  font-size: 13px;
+  color: var(--tg-muted);
+  margin-bottom: 8px;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+}
+
+.tg-field {
+  background: var(--tg-surface);
+  border: var(--tg-stroke) solid var(--tg-line);
+  border-radius: 0;
+  padding: 14px 16px;
+}
+
+.tg-input {
+  width: 100%;
+  font-size: 16px;
+  color: var(--tg-ink);
+  min-height: 24px;
+}
+
+.tg-option {
+  display: flex;
+  align-items: center;
+  background: var(--tg-surface);
+  border: var(--tg-stroke) solid var(--tg-line);
+  border-radius: 0;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+}
+
+.tg-option .tg-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.tg-remove {
+  margin-left: 12px;
+  color: var(--tg-accent);
+  font-size: 13px;
+  flex-shrink: 0;
+  padding: 4px 0;
+  font-weight: 600;
+}
+
+.tg-add {
+  margin-top: 4px;
+  color: var(--tg-primary);
+  font-size: 14px;
+  padding: 8px 0;
+  font-weight: 600;
+}
+
+.tg-primary-btn {
+  margin-top: 28px;
+  background: var(--tg-ink);
+  color: #FFFFFF;
+  border-radius: 0;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  line-height: 48px;
+  height: 48px;
+  border: 2px solid var(--tg-ink);
+}
+
+/* 首页：表单 → CTA 略松 */
+.tg-primary-btn--loose {
+  margin-top: 36px;
+}
+
+.tg-primary-btn::after {
+  border: none;
+}
+
+/* 幽灵：硬边文字按钮 */
+.tg-ghost-btn {
+  margin-top: 12px;
+  background: transparent;
+  color: var(--tg-primary);
+  border-radius: 0;
+  font-size: 15px;
+  line-height: 44px;
+  height: 44px;
+  border: var(--tg-stroke) solid var(--tg-primary);
+  font-weight: 600;
+}
+
+.tg-ghost-btn::after {
+  border: none;
+}
+
+.tg-ghost-btn--danger {
+  color: var(--tg-accent);
+  border-color: var(--tg-accent);
+  font-weight: 500;
+}
+
+/* 拆解 sticky 底栏 */
+.tg-sticky-cta {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  margin-top: 24px;
+  padding: 12px 0 calc(12px + env(safe-area-inset-bottom));
+  background: linear-gradient(
+    180deg,
+    rgba(244, 246, 248, 0) 0%,
+    var(--tg-bg) 28%,
+    var(--tg-bg) 100%
+  );
+}
+
+.tg-sticky-cta .tg-primary-btn {
+  margin-top: 0;
+}
+
+.tg-sticky-cta .tg-ghost-btn,
+.tg-sticky-cta .tg-text-action {
+  margin-top: 8px;
+}
+
+.tg-text-action {
+  display: block;
+  text-align: right;
+  color: var(--tg-primary);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 4px;
+}
+
+/* 定论：大色块分镜 */
+.tg-verdict {
+  margin-top: 20px;
+  padding: 28px 22px;
+  background: var(--tg-surface);
+  border: 2px solid var(--tg-line);
+  border-left: 8px solid var(--tg-accent);
+  border-radius: 0;
+  transition: border-left-color 0.2s ease, background-color 0.25s ease;
+}
+
+.tg-verdict.is-flash {
+  border-left-width: 10px;
+  background: var(--tg-panel-alt);
+}
+
+.tg-verdict-label {
+  font-size: 12px;
+  color: var(--tg-accent);
+  letter-spacing: 0.28em;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.tg-verdict-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--tg-ink);
+  line-height: 1.25;
+  letter-spacing: 0.04em;
+}
+
+.tg-verdict-score {
+  margin-top: 10px;
+  font-size: 20px;
+  color: var(--tg-accent);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.tg-verdict-rule {
+  margin-top: 16px;
+  height: 2px;
+  background: var(--tg-line);
+}
+
+.tg-voice {
+  margin-top: 14px;
+  font-size: 14px;
+  color: var(--tg-muted);
+  line-height: 1.65;
+  white-space: pre-wrap;
+}
+
+.tg-voice--intro {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border: var(--tg-stroke) solid var(--tg-line);
+  border-left: 4px solid var(--tg-primary);
+  background: var(--tg-panel-alt);
+  color: var(--tg-ink);
+}
+
+.tg-rank {
+  margin-top: 28px;
+}
+
+.tg-rank-label {
+  font-size: 12px;
+  color: var(--tg-muted);
+  letter-spacing: 0.16em;
+  margin-bottom: 4px;
+  font-weight: 700;
+}
+
+.tg-rank-item {
+  padding: 12px 0;
+  border-bottom: 2px solid var(--tg-line-soft);
+}
+
+.tg-rank-item:last-child {
+  border-bottom: 2px solid var(--tg-line);
+}
+
+.tg-rank-item.is-rest .tg-rank-name,
+.tg-rank-item.is-rest .tg-rank-pct {
+  font-size: 13px;
+  color: var(--tg-muted);
+  font-weight: 400;
+}
+
+.tg-rank-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+
+.tg-rank-name {
+  font-size: 14px;
+  color: var(--tg-ink);
+  flex: 1;
+  min-width: 0;
+  padding-right: 12px;
+  font-weight: 600;
+}
+
+.tg-rank-pct {
+  font-size: 13px;
+  color: var(--tg-muted);
+  flex-shrink: 0;
+  font-weight: 600;
+}
+
+.tg-bar {
+  height: 6px;
+  background: var(--tg-line-soft);
+  border-radius: 0;
+  overflow: hidden;
+  border: 1px solid var(--tg-line);
+}
+
+.tg-bar-fill {
+  height: 100%;
+  width: 0;
+  background: var(--tg-primary);
+  border-radius: 0;
+  transition: width 0.38s ease-out;
+}
+
+.tg-bar-fill.is-top {
+  background: var(--tg-accent);
+}
+
+.tg-list {
+  margin-top: 20px;
+  border-top: 2px solid var(--tg-line);
+}
+
+.tg-list-item {
+  display: flex;
+  align-items: stretch;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid var(--tg-line);
+  border-radius: 0;
+  margin-bottom: 0;
+  overflow: hidden;
+}
+
+.tg-list-item:nth-child(even) {
+  background: var(--tg-panel-alt);
+}
+
+.tg-list-main {
+  flex: 1;
+  min-width: 0;
+  padding: 16px 12px 16px 0;
+}
+
+.tg-list-title {
+  font-size: 16px;
+  color: var(--tg-ink);
+  font-weight: 600;
+}
+
+.tg-list-meta {
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--tg-muted);
+  line-height: 1.45;
+}
+
+.tg-list-action {
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  color: var(--tg-accent);
+  font-size: 13px;
+  font-weight: 600;
+  border-left: 2px solid var(--tg-line);
+}
+
+.tg-empty {
+  margin-top: 56px;
+  padding: 0 12px;
+  text-align: center;
+  color: var(--tg-muted);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.tg-empty-line {
+  margin-bottom: 4px;
+}
+
+.tg-empty .tg-link {
+  margin-top: 16px;
+}
+
+.tg-subject {
+  margin-top: 8px;
+  font-size: 14px;
+  color: var(--tg-muted);
+}
+
+/* 结果页：页眉收敛 */
+.tg-result-head {
+  margin-bottom: 4px;
+}
+
+.tg-result-head .tg-brow {
+  font-size: 20px;
 }

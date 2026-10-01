@@ -1,0 +1,74 @@
+<view class="tg-page">
+  <view class="tg-brow">正反拆解</view>
+  <view class="tg-aside">「每条路写清利与弊。本官只拆自欺，不定夺——定夺另算。」</view>
+
+  <view class="tg-section">
+    <view class="tg-label">此局议题 <text class="tg-hint">可空</text></view>
+    <view class="tg-field">
+      <input class="tg-input" placeholder="写清你在纠结什么" value="{{subject}}" bindinput="subjectInput" />
+    </view>
+  </view>
+
+  <view class="tg-section">
+    <view class="tg-label">可走之路 <text class="tg-hint">至少两条，利弊宜填</text></view>
+    <block wx:for="{{options}}" wx:key="index" wx:for-index="idx">
+      <view class="tg-path-card">
+        <view class="tg-path-card__bar">
+          <text class="tg-path-card__ord">第 {{idx + 1}} 路</text>
+          <view class="tg-remove" wx:if="{{idx > 1}}" data-id="{{idx}}" bindtap="delOption">去掉</view>
+        </view>
+
+        <view class="tg-path-card__field">
+          <view class="tg-path-card__label">路名 <text class="tg-req">必填</text></view>
+          <input
+            class="tg-input"
+            data-idx="{{idx}}"
+            data-field="name"
+            value="{{item.name}}"
+            placeholder="例如：留下 / 离开"
+            bindinput="fieldInput"
+          />
+        </view>
+
+        <view class="tg-path-card__pair">
+          <view class="tg-path-card__field tg-path-card__field--pro">
+            <view class="tg-path-card__label">利 <text class="tg-hint">宜填</text></view>
+            <textarea
+              class="tg-path-card__area"
+              data-idx="{{idx}}"
+              data-field="pro"
+              value="{{item.pro}}"
+              placeholder="表面上站得住的理由"
+              maxlength="120"
+              auto-height
+              bindinput="fieldInput"
+            />
+          </view>
+          <view class="tg-path-card__field tg-path-card__field--con">
+            <view class="tg-path-card__label">弊 <text class="tg-hint">宜填</text></view>
+            <textarea
+              class="tg-path-card__area"
+              data-idx="{{idx}}"
+              data-field="con"
+              value="{{item.con}}"
+              placeholder="你最不想承认的代价"
+              maxlength="120"
+              auto-height
+              bindinput="fieldInput"
+            />
+          </view>
+        </view>
+
+        <view class="tg-comment {{item.comment ? 'is-enter' : ''}}" wx:if="{{item.comment}}">{{item.comment}}</view>
+      </view>
+    </block>
+    <view class="tg-add" bindtap="addOption">再添一路</view>
+  </view>
+
+  <view class="tg-voice tg-voice--intro" wx:if="{{intro}}">{{intro}}</view>
+
+  <view class="tg-sticky-cta">
+    <button class="tg-primary-btn" bindtap="doDissect">请咎儿拆解</button>
+    <view class="tg-text-action" wx:if="{{done}}" bindtap="sendToDecide">拿去定夺</view>
+  </view>
+</view>
