@@ -91,12 +91,39 @@ Token 写在 `app.wxss` 的 `page` 上：
 - 勿提交 `project.private.config.json`（本地 IDE / 私有设置）。仅在有意时提交公开的 `project.config.json` AppID/设置。
 - 评分通过 CRC32 seed 保持确定性；无产品意图勿把决定百分比换成「真随机」。
 - 匹配现有 JS 风格（CommonJS `require` / `module.exports`、`var` + 经典 `Page` 处理器）。
+- **新需求必须开功能分支开发**；发布步骤见「发布与分支流程」。勿在 `master` / `main` 上直接堆改动。
+
+## 发布与分支流程
+
+主分支目标为 **`main`**。若远端目前仍只有 `master`：PR 先打到 `master`，并尽快把默认分支统一为 `main`（可从当前默认分支创建 `main` 后改默认）。**禁止**在 `master` / `main` 上直接堆需求改动。
+
+每次开发与发布按下列顺序执行（不得跳步）：
+
+1. **开分支** — 从最新主分支拉出功能分支（如 `fix/…`、`feat/…`），在分支上开发。
+2. **冒烟 + 回归** — 发布前必须验证通过后再继续。最低覆盖：表单 → 定论 → 历史；拆解 → 草稿交接；笔记 CRUD；若改了分享，再验定论分享/保存图。可用微信开发者工具或 `user-weapp-devtools` MCP。
+3. **commit** — 验证通过后 `git commit`；message 写清**本次更新内容与原因**（中文或英文均可，但要具体）。勿提交 `project.private.config.json` / 密钥。
+4. **push 分支** — `git push -u origin HEAD`（或等价）推远程功能分支。
+5. **开 PR 到 main** — 用 `gh pr create`（或网页）将功能分支合入 `main`。若仓库尚无 `main`、默认仍是 `master`：本次 PR 目标写 `master`，并在 PR/AGENT 中注明待统一为 `main`。`gh auth` 失效时先完成 push，再提示执行 `gh auth refresh -h github.com` 后补开 PR。
+6. **上传微信** — 用开发者工具 CLI 打包上传为体验版/正式待审更新，**版本号与描述与本次更新一致**：
+
+```bash
+"/Applications/wechatwebdevtools.app/Contents/MacOS/cli" upload \
+  --project "/Users/r2d2/IdeaProjects/homework-score/Jiuer-WeChat-Mini-Program" \
+  -v "YY.MM.DD.HHMM" \
+  -d "更新说明（与 commit/PR 一致）" \
+  -i "/tmp/wechat-upload/upload-info.json" \
+  --lang zh
+```
+
+上传成功后在下方「版本与 git」登记版本号与说明。
 
 ## 版本与 git
 
 - 里程碑上传：**26.10.01.1156**
-- 同版本复传（优化）：**26.10.01.1156** — 描述「优化：定论分享海报/结果页/抹去动效」（分享海报、结果页 UI、dissolve 抹去动效及相关 polish）。版本号保持一致，不另开号。
-- 近期 `master` 方向（见 `git log`）：重定义为本地决定 / 拆解 / 笔记 + 刀语扁平 UI（`7f688c8` 及相关 WIP）。更早提交属密码 / Lo裙 / HTTP 时代 — 仅作历史。
+- 同版本复传（优化）：**26.10.01.1156** — 描述「优化：定论分享海报/结果页/抹去动效」
+- **26.10.02.0930** — 修复可走之路输入焦点跳转（`wx:key=index`）；固化「发布与分支流程」
+- 远端默认分支现状：**`master`**（目标统一为 `main`）
+- 近期方向（见 `git log`）：本地决定 / 拆解 / 笔记 + 刀语扁平 UI（`7f688c8` 及后续）。更早提交属密码 / Lo裙 / HTTP 时代 — 仅作历史。
 
 ## 如何运行
 
@@ -110,7 +137,7 @@ Token 写在 `app.wxss` 的 `page` 上：
 - 复用 `tg-*` token/类；朱红强调少用（裁决、危险、每日标签）。
 - 新 UX 走决定 / 拆解 / 笔记，除非产品有意扩展。
 - 跨页共享的人设字符串放进 `togameVoice.js`。
-- UI 改动后冒烟：表单 → 结果 → 历史、拆解 → 草稿交接、笔记 CRUD。
+- UI 改动后按「发布与分支流程」做冒烟 / 回归：表单 → 结果 → 历史、拆解 → 草稿交接、笔记 CRUD。
 
 ## 不要
 

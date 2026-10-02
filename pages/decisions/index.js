@@ -85,8 +85,9 @@ Page({
     }, dissolve.DURATION)
   },
   itemInput: function (e) {
+    var idx = Number(e.currentTarget.dataset.idx)
     var tempList = this.data.advice.slice()
-    tempList[e.target.id] = e.detail.value
+    tempList[idx] = e.detail.value
     this.setData({
       advice: tempList
     })
