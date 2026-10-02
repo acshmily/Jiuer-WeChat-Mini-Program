@@ -104,25 +104,35 @@ Token 写在 `app.wxss` 的 `page` 上：
 3. **commit** — 验证通过后 `git commit`；message 写清**本次更新内容与原因**（中文或英文均可，但要具体）。勿提交 `project.private.config.json` / 密钥。
 4. **push 分支** — `git push -u origin HEAD`（或等价）推远程功能分支。
 5. **开 PR 到 main** — 用 `gh pr create`（或网页）将功能分支合入 `main`。若仓库尚无 `main`、默认仍是 `master`：本次 PR 目标写 `master`，并在 PR/AGENT 中注明待统一为 `main`。`gh auth` 失效时先完成 push，再提示执行 `gh auth refresh -h github.com` 后补开 PR。
-6. **上传微信** — 用开发者工具 CLI 打包上传为体验版/正式待审更新，**版本号与描述与本次更新一致**：
+6. **上传微信** — 用开发者工具 CLI 打包上传为体验版/正式待审更新，**版本号与描述与本次更新一致**（格式 `YY.MM.DD.HH.MM`，如 `26.10.02.09.30`）：
 
 ```bash
 "/Applications/wechatwebdevtools.app/Contents/MacOS/cli" upload \
   --project "/Users/r2d2/IdeaProjects/homework-score/Jiuer-WeChat-Mini-Program" \
-  -v "YY.MM.DD.HHMM" \
+  -v "YY.MM.DD.HH.MM" \
   -d "更新说明（与 commit/PR 一致）" \
   -i "/tmp/wechat-upload/upload-info.json" \
   --lang zh
 ```
 
-上传成功后在下方「版本与 git」登记版本号与说明。
+7. **保留版本发布分支（正式发布必做）** — 每次正式上传后，在 git 上从本次发布提交打出并 **push** 同名分支，作为可追溯快照。分支名与微信上传版本号对齐，点分隔年月日时分，例如：`26.10.02.09.30`。
+
+```bash
+VER="26.10.02.09.30"   # 与 -v 一致
+git branch "$VER"      # 指向本次发布提交
+git push -u origin "$VER"
+```
+
+勿删远端版本分支；功能分支（`fix/…`）可按需合并后清理，版本分支长期保留。
+
+上传成功后在下方「版本与 git」登记版本号、版本分支名与说明。
 
 ## 版本与 git
 
 - 里程碑上传：**26.10.01.1156**
 - 同版本复传（优化）：**26.10.01.1156** — 描述「优化：定论分享海报/结果页/抹去动效」
-- **26.10.02.0930** — 修复可走之路输入焦点跳转（`wx:key=index`）；固化「发布与分支流程」
-- 远端默认分支现状：**`master`**（目标统一为 `main`）
+- **26.10.02.09.31** — 分支 `26.10.02.09.31`；修复可走之路输入焦点跳转（`wx:key=index`）；固化「发布与分支流程」（含正式版版本分支）
+- 远端已建 **`main`**（自 `master` 同步起点）；默认分支仍可能是 `master`，尽快在 GitHub 改为 `main`
 - 近期方向（见 `git log`）：本地决定 / 拆解 / 笔记 + 刀语扁平 UI（`7f688c8` 及后续）。更早提交属密码 / Lo裙 / HTTP 时代 — 仅作历史。
 
 ## 如何运行
