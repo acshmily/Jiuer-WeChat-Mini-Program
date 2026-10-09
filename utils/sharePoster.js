@@ -198,6 +198,8 @@ function draw(canvas, payload, qrImage) {
   } catch (e) {
     dpr = 1
   }
+  // 750×1334 设计稿导出封顶 dpr=2（1500×2668 足够分享），避免高密度屏常驻 30MB+ 缓冲
+  dpr = Math.min(dpr, 2)
   canvas.width = POSTER_W * dpr
   canvas.height = POSTER_H * dpr
   var ctx = canvas.getContext('2d')

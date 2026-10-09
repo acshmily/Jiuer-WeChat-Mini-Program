@@ -91,6 +91,7 @@ Token 写在 `app.wxss` 的 `page` 上：
 - 勿提交 `project.private.config.json`（本地 IDE / 私有设置）。仅在有意时提交公开的 `project.config.json` AppID/设置。
 - 评分通过 CRC32 seed 保持确定性；无产品意图勿把决定百分比换成「真随机」。
 - 匹配现有 JS 风格（CommonJS `require` / `module.exports`、`var` + 经典 `Page` 处理器）。
+- `sitemap.json` 全站 disallow（个人本地工具，无索引需求）；要开放微信搜索再改 rules。
 - **新需求必须开功能分支开发**；发布步骤见「发布与分支流程」。勿在 `master` / `main` 上直接堆改动。
 
 ## 发布与分支流程
