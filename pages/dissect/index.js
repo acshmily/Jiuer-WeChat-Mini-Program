@@ -3,17 +3,31 @@ const dissolve = require('../../utils/dissolve.js')
 
 var PENDING_KEY = 'pendingDecisionDraft'
 
-function blankOption() {
-  return { name: '', pro: '', con: '', comment: '' }
-}
-
 Page({
   data: {
     subject: '',
-    options: [blankOption(), blankOption()],
+    options: [],
     intro: '',
     done: false,
-    dissolvingIdx: -1
+    dissolvingId: ''
+  },
+  onLoad: function () {
+    this._optSeq = 0
+    this._sending = false
+    this.setData({
+      subject: '',
+      options: [this.nextOption(), this.nextOption()],
+      intro: '',
+      done: false,
+      dissolvingId: ''
+    })
+  },
+  onUnload: function () {
+    clearTimeout(this._dissolveTimer)
+  },
+  nextOption: function () {
+    this._optSeq = (this._optSeq || 0) + 1
+    return { id: 'p' + this._optSeq, name: '', pro: '', con: '', comment: '' }
   },
   subjectInput: function (e) {
     this.setData({
@@ -23,20 +37,27 @@ Page({
     })
   },
   fieldInput: function (e) {
-    var idx = e.currentTarget.dataset.idx
+    var id = e.currentTarget.dataset.id
     var field = e.currentTarget.dataset.field
-    var options = this.data.options.slice()
-    var row = Object.assign({}, options[idx])
-    row[field] = e.detail.value
-    row.comment = ''
-    options[idx] = row
-    this.setData({
-      options: options,
-      done: false,
-      intro: ''
-    })
+    var options = this.data.options
+    for (var i = 0; i < options.length; i++) {
+      if (options[i].id !== id) {
+        continue
+      }
+      var patch = {
+        done: false,
+        intro: ''
+      }
+      patch['options[' + i + '].' + field] = e.detail.value
+      patch['options[' + i + '].comment'] = ''
+      this.setData(patch)
+      return
+    }
   },
   addOption: function () {
+    if (this.data.dissolvingId) {
+      return
+    }
     var options = this.data.options
     for (var i = 0; i < options.length; i++) {
       if (!String(options[i].name || '').trim()) {
@@ -48,38 +69,37 @@ Page({
       }
     }
     this.setData({
-      options: options.concat([blankOption()]),
+      options: options.concat([this.nextOption()]),
       done: false,
       intro: ''
     })
   },
   delOption: function (e) {
-    var id = Number(e.currentTarget.dataset.id)
+    var id = e.currentTarget.dataset.id
     var self = this
-    if (this.data.dissolvingIdx >= 0) {
+    if (this.data.dissolvingId) {
       return
     }
     this.setData({
-      dissolvingIdx: id
+      dissolvingId: id
     })
     clearTimeout(this._dissolveTimer)
     this._dissolveTimer = setTimeout(function () {
-      var options = []
-      for (var i = 0; i < self.data.options.length; i++) {
-        if (i === id) {
-          continue
-        }
-        options.push(self.data.options[i])
-      }
+      var kept = self.data.options.filter(function (row) {
+        return row.id !== id
+      })
       self.setData({
-        options: options,
-        dissolvingIdx: -1,
+        options: kept,
+        dissolvingId: '',
         done: false,
         intro: ''
       })
     }, dissolve.DURATION)
   },
   doDissect: function () {
+    if (this.data.dissolvingId) {
+      return
+    }
     var options = this.data.options
     var filled = []
     for (var i = 0; i < options.length; i++) {
@@ -88,6 +108,7 @@ Page({
         continue
       }
       filled.push({
+        id: options[i].id,
         name: name,
         pro: String(options[i].pro || '').trim(),
         con: String(options[i].con || '').trim(),
@@ -111,9 +132,13 @@ Page({
     })
   },
   sendToDecide: function () {
+    if (this._sending || this.data.dissolvingId) {
+      return
+    }
     var names = []
-    for (var i = 0; i < this.data.options.length; i++) {
-      var name = String(this.data.options[i].name || '').trim()
+    var options = this.data.options
+    for (var i = 0; i < options.length; i++) {
+      var name = String(options[i].name || '').trim()
       if (name) {
         names.push(name)
       }
@@ -125,6 +150,7 @@ Page({
       })
       return
     }
+    this._sending = true
     wx.setStorageSync(PENDING_KEY, JSON.stringify({
       subject: this.data.subject || '',
       options: names

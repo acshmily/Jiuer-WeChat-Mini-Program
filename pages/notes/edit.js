@@ -18,6 +18,7 @@ Page({
     dissolving: false
   },
   onLoad: function (query) {
+    this._saving = false
     var id = query && query.id ? String(query.id) : ''
     if (!id) {
       this.setData({
@@ -48,6 +49,9 @@ Page({
       dissolving: false
     })
   },
+  onUnload: function () {
+    clearTimeout(this._dissolveTimer)
+  },
   pickTag: function (e) {
     this.setData({
       tag: e.currentTarget.dataset.tag
@@ -59,7 +63,7 @@ Page({
     })
   },
   save: function () {
-    if (this.data.dissolving) {
+    if (this._saving || this.data.dissolving) {
       return
     }
     var body = String(this.data.body || '').trim()
@@ -70,6 +74,7 @@ Page({
       })
       return
     }
+    this._saving = true
     if (this.data.isEdit) {
       noteStore.update(this.data.id, body, this.data.tag)
     } else {
@@ -84,10 +89,10 @@ Page({
       return
     }
     wx.showModal({
-      title: '抹去',
-      content: '抹去这条札记？抹了不回。',
-      confirmText: '抹去',
-      confirmColor: '#8B2E2E',
+      title: voice.MODAL_ERASE_TITLE,
+      content: voice.ERASE_NOTE,
+      confirmText: voice.MODAL_ERASE_CONFIRM,
+      confirmColor: '#A83232',
       success: function (res) {
         if (!res.confirm) {
           return

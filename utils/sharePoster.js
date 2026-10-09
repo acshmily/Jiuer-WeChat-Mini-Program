@@ -67,7 +67,7 @@ function wrapText(ctx, text, maxWidth, maxLines) {
         if (lines.length >= limit) {
           var last = lines[lines.length - 1]
           if (last.charAt(last.length - 1) !== '…') {
-            lines[lines.length - 1] = truncate(last, Math.max(1, last.length))
+            lines[lines.length - 1] = last.slice(0, Math.max(1, last.length - 1)) + '…'
           }
           return lines
         }
@@ -189,7 +189,12 @@ function draw(canvas, payload, qrImage) {
   var data = payload || {}
   var dpr = 1
   try {
-    dpr = wx.getSystemInfoSync().pixelRatio || 1
+    // getSystemInfoSync 已废弃；优先新 API，旧基础库回退
+    if (typeof wx.getWindowInfo === 'function') {
+      dpr = wx.getWindowInfo().pixelRatio || 1
+    } else {
+      dpr = wx.getSystemInfoSync().pixelRatio || 1
+    }
   } catch (e) {
     dpr = 1
   }

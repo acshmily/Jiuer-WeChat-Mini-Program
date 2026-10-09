@@ -3,6 +3,8 @@ const util = require('./util.js')
 const KEY = 'strategyNotes'
 const MAX = 50
 const TAGS = ['人', '局', '险']
+// 同毫秒多次 add（防连点兜底）也需要可区分的 id
+var idSeq = 0
 
 function read() {
   var json = wx.getStorageSync(KEY)
@@ -27,7 +29,7 @@ function normalizeTag(tag) {
 
 function add(body, tag) {
   var record = {
-    id: String(Date.now()),
+    id: String(Date.now()) + '-' + (++idSeq),
     body: String(body || '').trim(),
     tag: normalizeTag(tag),
     createdAt: util.formatTime(new Date()),
