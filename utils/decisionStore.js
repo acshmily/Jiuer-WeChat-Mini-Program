@@ -3,6 +3,8 @@ const util = require('./util.js')
 
 const KEY = 'decisionHistory'
 const MAX = 30
+// 同毫秒多次 add（防连点兜底）也需要可区分的 id
+var idSeq = 0
 
 function read() {
     var json = wx.getStorageSync(KEY)
@@ -23,7 +25,7 @@ function write(list) {
 
 function add(subject, options) {
     var record = {
-        id: String(Date.now()),
+        id: String(Date.now()) + '-' + (++idSeq),
         subject: subject,
         seed: 0,
         createdAt: util.formatTime(new Date()),

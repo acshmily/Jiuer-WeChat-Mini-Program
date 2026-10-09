@@ -11,23 +11,23 @@
 
   <view class="tg-section">
     <view class="tg-label">可走之路 <text class="tg-hint">至少两条，利弊宜填</text></view>
-    <block wx:for="{{options}}" wx:key="index" wx:for-index="idx">
+    <block wx:for="{{options}}" wx:key="id" wx:for-index="idx">
       <tg-dissolve
         host-class="{{idx % 2 === 1 ? 'tg-path-dissolve tg-path-dissolve--alt' : 'tg-path-dissolve'}}"
         count="24"
-        playing="{{dissolvingIdx === idx}}"
+        playing="{{dissolvingId === item.id}}"
       >
         <view class="tg-path-card tg-path-card--plain">
           <view class="tg-path-card__bar">
             <text class="tg-path-card__ord">第 {{idx + 1}} 路</text>
-            <view class="tg-remove" wx:if="{{idx > 1}}" data-id="{{idx}}" bindtap="delOption">去掉</view>
+            <view class="tg-remove" wx:if="{{idx > 1}}" data-id="{{item.id}}" bindtap="delOption">去掉</view>
           </view>
 
           <view class="tg-path-card__field">
             <view class="tg-path-card__label">路名 <text class="tg-req">必填</text></view>
             <input
               class="tg-input"
-              data-idx="{{idx}}"
+              data-id="{{item.id}}"
               data-field="name"
               value="{{item.name}}"
               placeholder="例如：留下 / 离开"
@@ -40,7 +40,7 @@
               <view class="tg-path-card__label">利 <text class="tg-hint">宜填</text></view>
               <textarea
                 class="tg-path-card__area"
-                data-idx="{{idx}}"
+                data-id="{{item.id}}"
                 data-field="pro"
                 value="{{item.pro}}"
                 placeholder="表面上站得住的理由"
@@ -53,7 +53,7 @@
               <view class="tg-path-card__label">弊 <text class="tg-hint">宜填</text></view>
               <textarea
                 class="tg-path-card__area"
-                data-idx="{{idx}}"
+                data-id="{{item.id}}"
                 data-field="con"
                 value="{{item.con}}"
                 placeholder="你最不想承认的代价"

@@ -22,20 +22,6 @@ var crc32 = function(str) {
     return (crc ^ (-1)) >>> 0;
 };
 /**
- * 按要求排序
- * @param keyName
- * @returns {Function}
- */
-var objectArraySort = function (keyName) {
-    return function (objectN, objectM) {
-        var valueN = objectN[keyName]
-        var valueM = objectM[keyName]
-        if (valueN < valueM) return 1
-        else if (valueN > valueM) return -1
-        else return 0
-    }
-}
-/**
  * 同一主题、同一选项顺序、同一个 seed，占比不变。
  * 返回值保持输入顺序，分数为合计 100 的两位小数字符串。
  */
@@ -83,17 +69,6 @@ function rankByScore(items) {
     })
 }
 
-var randomEmoji =function(){
-    let list = ['(=^･ｪ･^=)','(=^‥^=)','( =①ω①=)','(=^･^=)','o(^・x・^)o','d(=^･ω･^=)b','V(=^･ω･^=)v','(=ＴェＴ=)',
-        '(=;ェ;=)','(=｀ω´=)','ヽ(=^･ω･^=)丿','(=^･ω･^)y＝','＼(=^‥^)/’`','(^-人-^)','ヽ(^‥^=ゞ)','(^・ω・^ )',
-        '(=^-ω-^=)','b(=^‥^=)o','(.=^・ェ・^=)','（=´∇｀=）','ヾ(=ﾟ･ﾟ=)ﾉ','~(=^‥^)ノ','~(=^‥^)/','(=ｘェｘ=)','(=；ェ；=)',
-        '(=｀ェ´=)','(^･o･^)ﾉ"','<(*ΦωΦ*)>','(^._.^)ﾉ','└(=^‥^=)┐','=’①。①’=']
-    return list[Math.floor(Math.random()*list.length)]
-}
-
 module.exports.dealOptions = crc32
-exports.makeCRCTable = makeCRCTable
-exports.objectArraySort = objectArraySort
 exports.scoreOptions = scoreOptions
 exports.rankByScore = rankByScore
-exports.randomEmoji = randomEmoji

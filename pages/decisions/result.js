@@ -1,4 +1,3 @@
-const dealUntils = require('../../utils/dealOptionsUntils.js')
 const decisionStore = require('../../utils/decisionStore.js')
 const voice = require('../../utils/togameVoice.js')
 const sharePoster = require('../../utils/sharePoster.js')
@@ -52,10 +51,19 @@ Page({
       })
       return
     }
-    var ranked = dealUntils.rankByScore(record.items)
+    var items = Array.isArray(record.items) ? record.items : []
+    // 带原始下标排序：reroll 前后同名路 key 稳定，条形动画才能同节点过渡
+    var ranked = items
+      .map(function (item, i) {
+        return { origin: i, option: item.option, score: item.score }
+      })
+      .sort(function (a, b) {
+        return parseFloat(b.score) - parseFloat(a.score)
+      })
     var rows = []
     for (var i = 0; i < ranked.length; i++) {
       rows.push({
+        key: 'o' + ranked[i].origin,
         option: ranked[i].option,
         score: ranked[i].score,
         isTop: i === 0,
@@ -90,6 +98,7 @@ Page({
       var animated = []
       for (var j = 0; j < rows.length; j++) {
         animated.push({
+          key: rows[j].key,
           option: rows[j].option,
           score: rows[j].score,
           isTop: rows[j].isTop,
@@ -121,8 +130,9 @@ Page({
       seed: record.seed != null ? record.seed : 0
     })
   },
-  refreshPoster: function (snapshot) {
+  refreshPoster: function (snapshot, attempt) {
     var self = this
+    var tries = attempt || 0
     var token = ++this._posterToken
     this.setData({ posterBusy: true })
     var payload = {
@@ -134,7 +144,7 @@ Page({
       createdAt: snapshot.createdAt || '',
       seed: snapshot.seed
     }
-    // 等 canvas 挂载
+    // 等 canvas 挂载；首次失败多为低端机首帧未渲染完，延迟一拍重试一次
     setTimeout(function () {
       sharePoster
         .exportTempPath(self, payload)
@@ -147,6 +157,10 @@ Page({
         })
         .catch(function () {
           if (token !== self._posterToken) return
+          if (tries < 1) {
+            self.refreshPoster(snapshot, tries + 1)
+            return
+          }
           self.setData({
             shareImagePath: '',
             posterBusy: false
@@ -156,7 +170,7 @@ Page({
             icon: 'none'
           })
         })
-    }, 80)
+    }, tries === 0 ? 80 : 400)
   },
   onShareAppMessage: function () {
     var out = {

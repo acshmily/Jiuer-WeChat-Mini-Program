@@ -14,6 +14,9 @@ Page({
     }
     this.reloadList()
   },
+  onUnload: function () {
+    clearTimeout(this._dissolveTimer)
+  },
   reloadList: function () {
     var records = decisionStore.list()
     var list = []
@@ -52,10 +55,10 @@ Page({
       return
     }
     wx.showModal({
-      title: '抹去',
-      content: '抹去这一局？抹了不回。',
-      confirmText: '抹去',
-      confirmColor: '#8B2E2E',
+      title: voice.MODAL_ERASE_TITLE,
+      content: voice.ERASE_RECORD,
+      confirmText: voice.MODAL_ERASE_CONFIRM,
+      confirmColor: '#A83232',
       success: function (res) {
         if (!res.confirm) {
           return

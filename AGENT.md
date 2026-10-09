@@ -53,7 +53,6 @@
 - **`utils/togameVoice.js`** — 句库：`DAILY_LINES`（`dailyLine` 按日期稳定）、`RESULT_LINES` / `REROLL_LINES`、`DISSECT_INTROS` / `DISSECT_TEMPLATES`（及利弊偏斜分支池）、空态 / 校验 / 抹去确认文案；分享：`shareTitle`、落印 / 相册授权 toast。`asVoice` 轻裹「」。优先用 voice 导出，勿在页面硬编码人设句。
 - **`utils/sharePoster.js`** — Canvas 2D 绘制定论海报（冰墨朱红 token 硬编码）并 `exportTempPath`；竖版约 750×1334。
 - **`utils/util.js`** — 时间戳用 `formatTime`
-- **`utils/stringUntils.js`** — 空桩；除非需要否则忽略
 
 ## UI 体系（刀语扁平）
 
@@ -80,6 +79,7 @@ Token 写在 `app.wxss` 的 `page` 上：
 - Lo裙 / Infanta 图鉴（`pages/infanta/*`）
 - 登录 / JWT / HTTP（`utils/jwtUntil.js`、`utils/httpUntil.js`、旧 `pages/index` 登录）
 - 杂项演示（`pages/logs`、`pages/native`）
+- 2026-10-09 清理：`weui.wxss`、`utils/stringUntils.js` 空桩、`images/native/*` 旧素材、`dealOptionsUntils.js` 中无引用的 `objectArraySort` / `randomEmoji` / `makeCRCTable` 导出
 
 若这些文件仍以已删但磁盘残留形式出现，以 **`app.json` 页面列表** 为事实来源。无明确产品需求不要重新接入。
 
@@ -91,6 +91,7 @@ Token 写在 `app.wxss` 的 `page` 上：
 - 勿提交 `project.private.config.json`（本地 IDE / 私有设置）。仅在有意时提交公开的 `project.config.json` AppID/设置。
 - 评分通过 CRC32 seed 保持确定性；无产品意图勿把决定百分比换成「真随机」。
 - 匹配现有 JS 风格（CommonJS `require` / `module.exports`、`var` + 经典 `Page` 处理器）。
+- `sitemap.json` 全站 disallow（个人本地工具，无索引需求）；要开放微信搜索再改 rules。
 - **新需求必须开功能分支开发**；发布步骤见「发布与分支流程」。勿在 `master` / `main` 上直接堆改动。
 
 ## 发布与分支流程

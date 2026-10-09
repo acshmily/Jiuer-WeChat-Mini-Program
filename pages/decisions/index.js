@@ -7,19 +7,23 @@ var PENDING_KEY = 'pendingDecisionDraft'
 Page({
   data: {
     subject: '',
-    advice: ['', ''],
+    advice: [],
     aside: '',
-    dissolvingIdx: -1
+    dissolvingId: ''
   },
   onLoad: function () {
+    this._rowSeq = 0
+    this._submitting = false
     this.setData({
       subject: '',
-      advice: ['', ''],
+      advice: [this.nextRow(), this.nextRow()],
       aside: voice.dailyLine(),
-      dissolvingIdx: -1
+      dissolvingId: ''
     })
   },
   onShow: function () {
+    var self = this
+    this._submitting = false
     var patch = {
       aside: voice.dailyLine()
     }
@@ -29,7 +33,11 @@ Page({
         var draft = typeof raw === 'string' ? JSON.parse(raw) : raw
         if (draft && Array.isArray(draft.options) && draft.options.length >= 2) {
           patch.subject = draft.subject || ''
-          patch.advice = draft.options.slice()
+          patch.advice = draft.options.map(function (text) {
+            var row = self.nextRow()
+            row.text = String(text == null ? '' : text)
+            return row
+          })
         }
       } catch (e) {
         // ignore corrupt draft
@@ -38,59 +46,66 @@ Page({
     }
     this.setData(patch)
   },
+  onUnload: function () {
+    clearTimeout(this._dissolveTimer)
+  },
+  nextRow: function () {
+    this._rowSeq = (this._rowSeq || 0) + 1
+    return { id: 'r' + this._rowSeq, text: '' }
+  },
   addMoreInput: function () {
-    var tempAdvice = this.data.advice.slice()
-    var check = false
-    for (var i = 0; i < tempAdvice.length; i++) {
-      if (tempAdvice[i] == '' || tempAdvice[i] == null) {
-        check = true
-        break
-      }
-    }
-    if (check) {
-      wx.showModal({
-        content: voice.EMPTY_SLOT,
-        showCancel: false
-      })
+    if (this.data.dissolvingId) {
       return
     }
-    tempAdvice.push('')
+    var advice = this.data.advice
+    for (var i = 0; i < advice.length; i++) {
+      if (!String(advice[i].text || '').trim()) {
+        wx.showModal({
+          content: voice.EMPTY_SLOT,
+          showCancel: false
+        })
+        return
+      }
+    }
     this.setData({
-      advice: tempAdvice
+      advice: advice.concat([this.nextRow()])
     })
   },
   delItem: function (e) {
-    var id = Number(e.currentTarget.dataset.id)
+    var id = e.currentTarget.dataset.id
     var self = this
-    if (this.data.dissolvingIdx >= 0) {
+    if (this.data.dissolvingId) {
       return
     }
     this.setData({
-      dissolvingIdx: id
+      dissolvingId: id
     })
     clearTimeout(this._dissolveTimer)
     this._dissolveTimer = setTimeout(function () {
-      var tempList = self.data.advice
-      var newList = []
-      for (var i = 0; i < tempList.length; i++) {
-        if (i === id) {
-          continue
-        }
-        newList.push(tempList[i])
-      }
+      var kept = self.data.advice.filter(function (row) {
+        return row.id !== id
+      })
       self.setData({
-        advice: newList,
-        dissolvingIdx: -1
+        advice: kept,
+        dissolvingId: ''
       })
     }, dissolve.DURATION)
   },
   itemInput: function (e) {
-    var idx = Number(e.currentTarget.dataset.idx)
-    var tempList = this.data.advice.slice()
-    tempList[idx] = e.detail.value
-    this.setData({
-      advice: tempList
-    })
+    var id = e.currentTarget.dataset.id
+    var advice = this.data.advice
+    for (var i = 0; i < advice.length; i++) {
+      if (advice[i].id !== id) {
+        continue
+      }
+      if (advice[i].text === e.detail.value) {
+        return
+      }
+      var patch = {}
+      patch['advice[' + i + '].text'] = e.detail.value
+      this.setData(patch)
+      return
+    }
   },
   subjectInput: function (e) {
     this.setData({
@@ -115,12 +130,17 @@ Page({
     })
   },
   doChoose: function () {
+    if (this._submitting || this.data.dissolvingId) {
+      return
+    }
     var options = []
-    for (var i = 0; i < this.data.advice.length; i++) {
-      if (this.data.advice[i] == '' || this.data.advice[i] == null) {
+    var advice = this.data.advice
+    for (var i = 0; i < advice.length; i++) {
+      var text = String(advice[i].text || '').trim()
+      if (!text) {
         continue
       }
-      options.push(this.data.advice[i])
+      options.push(text)
     }
     if (options.length < 2) {
       wx.showModal({
@@ -129,9 +149,14 @@ Page({
       })
       return
     }
-    var record = decisionStore.add(this.data.subject, options)
+    var self = this
+    this._submitting = true
+    var record = decisionStore.add(String(this.data.subject || '').trim(), options)
     wx.navigateTo({
-      url: 'result?id=' + record.id
+      url: 'result?id=' + record.id,
+      fail: function () {
+        self._submitting = false
+      }
     })
   }
 })
